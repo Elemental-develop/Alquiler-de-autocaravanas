@@ -42,6 +42,10 @@ INSTALLED_APPS = [
 
 MODULES = [
     'ProyectoPGPI',
+    'cesta',
+    'buscador',
+    'producto',
+
 ]
 
 MIDDLEWARE = [

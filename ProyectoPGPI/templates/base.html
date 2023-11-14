@@ -1,0 +1,35 @@
+<head>
+
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <style>
+
+        .fa-cart-shopping {
+            font-size: 36px;
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- Barra de búsqueda -->
+    <form method="get" action="">
+               <button type="submit">Buscar</button>
+    </form>
+
+    <!-- Contenido específico de cada página -->
+    <div id="content">
+      
+        <nav>
+            <ul>
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/productos/">Productos</a></li>
+                <!-- Agrega más elementos de menú según sea necesario -->
+            </ul>
+        </nav>
+    <a href="/carrito" title="Ir al carrito de compras">
+        <i  class="fas fa-cart-shopping"></i>
+    </a>
+    {% block content %}{% endblock %}
+    </div>
+
+

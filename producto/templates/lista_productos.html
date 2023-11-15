@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 2px solid #000;
+            width: 100%;
+        }
+
+        td {
+            border: 2px solid #000;
+            text-align: left;
+            padding: 8px;
+        }
+
+        td:first-child {
+            width: 300px;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .agotado-message {
+            color: red;
+            font-weight: bold;
+            float: right;
+            font-size: 30px;
+            margin-right: 10px;
+            margin-top: 0px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Catálogo de Autocaravanas de Alquiler</h2>
+    <ul>
+        {% for producto in productos %}
+        <table>
+            <tr>
+                <td>
+                    <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+                </td>
+                <td>
+                    <h3>{{ producto.nombre }} </h3>
+                    {% if producto.unidades == 0 %}
+                    <p class="agotado-message">¡Agotado!</p>
+                    {% endif %}
+                    <p>{{ producto.descripcion }}</p>
+                    <p>Precio: ${{ producto.precio }}</p>
+                    <a class="btn-link" href="/productos/{{producto.id}}">Más información</a>
+                </td>
+            </tr>
+        </table>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
+    </style>
+</head>
+
+
+</html>

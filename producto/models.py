@@ -9,5 +9,6 @@ class Producto(models.Model):
     imagen = models.URLField()
     unidades = models.IntegerField(default=0)
 
+
     def str(self):
         return self.nombre

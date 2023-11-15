@@ -54,9 +54,28 @@
     <!-- Barra de búsqueda y navegación -->
     <div id="navbar">
         <div id="search-bar">
+            <h1>{{marca}}</h1>
             <form method="get" action="/">
                 <label for="id_query" style="color: #ffd200" >Buscar:</label>
-                <input type="text" name="buscar" placeholder="Buscar..." class="form-control">
+                <input type="text" name="q" value="{% if busqueda_q != 'Buscar...' %}{{ busqueda_q }}{% endif %}" placeholder="Buscar..." class="form-control">
+
+                <label for="marca" style="color: #ffd200">Marca:</label>
+                <select name="marca">
+                    <option {% if not busqueda_marca %}selected{% endif %}></option>
+                    {% if not busqueda_marca == ""%}
+                        <option>{{ busqueda_marca }}</option>
+                    {% endif %}
+                    {% for marca in marcas %}
+                        <option value="{{ marca }}" {% if busqueda_marca == marca %}selected{% endif %}>{{ marca }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="precio_min" style="color: #ffd200" >Precio mínimo:</label>
+                <input style="width: 70px" type="number" name="precio_min" value="{{ busqueda_precio_min }}" min="0">
+
+                <label for="precio_max" style="color: #ffd200">Precio máximo:</label>
+                <input style="width: 70px" type="number" name="precio_max" value="{{ busqueda_precio_max }}" min="0">
+
                 <button type="submit">Buscar</button>
             </form>
         </div>

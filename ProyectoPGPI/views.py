@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from producto.models import Producto
 from django.db.models import Q
+from ProyectoPGPI.forms import CustomUserCreationForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -35,3 +38,30 @@ def home(request):
     productos = Producto.objects.filter(query).distinct()
 
     return render(request, "lista_productos.html", {'productos': productos, 'marcas': marcas,'busqueda_q': busqueda_q, 'busqueda_marca': busqueda_marca, 'busqueda_precio_min': busqueda_precio_min, 'busqueda_precio_max': busqueda_precio_max})
+
+
+def registro(request):
+    data = {
+        'form': CustomUserCreationForm()
+    }
+    if request.method == 'POST':
+        user_creation_form = CustomUserCreationForm(data=request.POST)
+
+        if user_creation_form.is_valid():
+            user = user_creation_form.save()
+
+            login(request, user)
+            return redirect('home')
+        else:
+            data['mensaje'] = 'Ha habido un error en el formulario'
+    return render(request, "registro.html", data)
+
+@login_required
+def cuenta(request):
+    return render(request, "cuenta.html", {'user': request.user})
+
+@login_required
+def logout_cuenta(request):
+    logout(request)
+    return redirect('home')
+

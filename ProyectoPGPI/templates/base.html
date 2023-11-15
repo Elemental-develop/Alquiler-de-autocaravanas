@@ -2,60 +2,66 @@
 
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
     <style>
-
         .fa-cart-shopping {
             font-size: 36px;
+            color: #ffd200
         }
+
+        .fa-user {
+            font-size: 36px;
+            color: #ffd200;
+        }
+
         #navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #8d021f; 
+            background-color: #8d021f;
             padding: 10px;
             color: white;
         }
-        
+
         #search-bar {
             display: flex;
             align-items: center;
         }
-        
+
         #search-bar label {
             margin-right: 10px;
         }
-        
+
         #search-bar input {
             margin-right: 10px;
         }
-        
+
         #nav-links {
             display: flex;
         }
-        
+
         #nav-links a {
             margin-right: 20px;
             text-decoration: none;
             color: white;
         }
-        
+
         #nav-links a:hover {
             text-decoration: underline;
         }
-        
+
         #content {
             padding: 20px;
         }
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
-
-
     <!-- Barra de búsqueda y navegación -->
     <div id="navbar">
         <div id="search-bar">
             <h1>{{marca}}</h1>
             <form method="get" action="/">
+
                 <label for="id_query" style="color: #ffd200" >Buscar:</label>
                 <input type="text" name="q" value="{% if busqueda_q != 'Buscar...' %}{{ busqueda_q }}{% endif %}" placeholder="Buscar..." class="form-control">
 
@@ -84,14 +90,18 @@
             <a href="/productos/" style="color: #ffd200">Productos</a>
             <!-- Agrega más elementos de menú según sea necesario -->
         </div>
-        <a href="/carrito" title="Ir al carrito de compras">
-            <i class="fas fa-cart-shopping" style="color: #ffd200"></i>
-        </a>
+        <div id="nav-links">
+            <a href="/carrito" title="Ir al carrito de compras">
+                <i class="fas fa-cart-shopping"></i>
+            </a>
+            <a href="/cuenta" title="Ir a mi cuenta">
+                <i class="fa-solid fa-user"></i>
+            </a>
+        </div>
     </div>
 
     <!-- Contenido específico de cada página -->
     <div id="content">
         {% block content %}{% endblock %}
     </div>
-
-
+</body>

@@ -26,4 +26,5 @@ urlpatterns = [
     path('productos/', lista_productos, name='lista_productos'),
     path('productos/<int:producto_id>/', detalles_producto, name='detalles_producto')
 
+
 ]

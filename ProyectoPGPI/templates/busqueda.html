@@ -1,0 +1,60 @@
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: 2px solid #000;
+            width: 100%;
+        }
+
+        /* Estilo para las celdas de la tabla */
+        td {
+            border: 1px solid #000;
+            text-align: left;
+            padding: 8px;
+        }
+
+        /* Estilo para la primera columna (imagen) */
+        td:first-child {
+            width: 300px; /* Establece la anchura deseada para la imagen */
+        }
+        .agotado-message {
+            color: red;
+            font-weight: bold;
+            float: right;
+            font-size: 30px;
+            margin-right: 10px;
+            margin-top: 0px;
+
+        }
+        /* Estilo para la imagen */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+{% extends 'base.html' %}
+{% block content %}
+<h2>Catálogo de Autocaravanas de Alquiler</h2>
+<ul>
+    {% for producto in productos %}
+    <table>
+        <tr>
+            <td>
+                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}" width="300">
+            </td>
+            <td>
+                <h3>{{ producto.nombre }}</h3>
+                {% if producto.unidades == 0 %}
+                <p class="agotado-message">¡Agotado!</p>
+                {% endif %}
+                <p>{{ producto.descripcion }}</p>
+                <p>Precio: ${{ producto.precio }}</p>
+                <a class="btn-link" href="/productos/{{producto.id}}">Más información</a>
+            </td>
+        </tr>
+    </table>
+    {% endfor %}
+</ul>
+{% endblock %}

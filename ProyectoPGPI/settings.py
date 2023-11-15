@@ -40,13 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'crispy_bootstrap5',
+    'ProyectoPGPI'
 ]
 
 MODULES = [
-    'ProyectoPGPI',
-    'cesta',
+   
     'buscador',
     'producto',
+    'cesta'
 
 ]
 

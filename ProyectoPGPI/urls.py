@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-
+from django.conf import settings
 from producto.views import lista_productos, detalles_producto
 from .views import home, registro, cuenta, logout_cuenta
 
@@ -32,3 +32,8 @@ urlpatterns = [
     path('logout/', logout_cuenta, name='logout')
 
 ]
+
+for module in settings.MODULES:
+    urlpatterns += [
+        path('{}/'.format(module), include('{}.urls'.format(module)))
+    ]

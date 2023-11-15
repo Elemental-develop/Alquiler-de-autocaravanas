@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Carrito de Compras</h2>
+  
+  <ul>
+    {% for item in items %}
+      <li>{{ item.producto.nombre }} - Cantidad: {{ item.cantidad }} - Subtotal: {{ item.calcular_subtotal }}</li>
+    {% endfor %}
+  </ul>
+  
+  <p>Total: {{ carrito.calcular_total }}</p>
+
+{% endblock %}

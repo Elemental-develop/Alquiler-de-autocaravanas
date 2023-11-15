@@ -3,6 +3,7 @@ from .models import Producto
 from django.shortcuts import render, get_object_or_404
 
 def lista_productos(request):
+    
     productos = Producto.objects.all()
     return render(request, 'lista_productos.html', {'productos': productos})
 

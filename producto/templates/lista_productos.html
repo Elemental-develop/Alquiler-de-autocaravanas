@@ -39,8 +39,9 @@
         }
     </style>
 </head>
-
+{% extends 'base.html' %}
 <body>
+    {% block content %}
     <h2>Catálogo de Autocaravanas de Alquiler</h2>
     <ul>
         {% for producto in productos %}
@@ -62,6 +63,7 @@
         </table>
         {% endfor %}
     </ul>
+    {% endblock %}
 </body>
 
 </html>

@@ -6,32 +6,73 @@
         .fa-cart-shopping {
             font-size: 36px;
         }
+        #navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #8d021f; 
+            padding: 10px;
+            color: white;
+        }
+        
+        #search-bar {
+            display: flex;
+            align-items: center;
+        }
+        
+        #search-bar label {
+            margin-right: 10px;
+        }
+        
+        #search-bar input {
+            margin-right: 10px;
+        }
+        
+        #nav-links {
+            display: flex;
+        }
+        
+        #nav-links a {
+            margin-right: 20px;
+            text-decoration: none;
+            color: white;
+        }
+        
+        #nav-links a:hover {
+            text-decoration: underline;
+        }
+        
+        #content {
+            padding: 20px;
+        }
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
 
-    <!-- Barra de búsqueda -->
-    <form method="get">
-        <label for="id_query">Buscar:</label>
-        <input type="text" name="buscar" placeholder="Buscar..." class="form-control"></input>
-        <button type="submit">Buscar</button>
-    </form>
+    <!-- Barra de búsqueda y navegación -->
+    <div id="navbar">
+        <div id="search-bar">
+            <form method="get" action="/">
+                <label for="id_query" style="color: #ffd200" >Buscar:</label>
+                <input type="text" name="buscar" placeholder="Buscar..." class="form-control">
+                <button type="submit">Buscar</button>
+            </form>
+        </div>
+        <div id="nav-links">
+            <a href="/" style="color: #ffd200">Inicio</a>
+            <a href="/productos/" style="color: #ffd200">Productos</a>
+            <!-- Agrega más elementos de menú según sea necesario -->
+        </div>
+        <a href="/carrito" title="Ir al carrito de compras">
+            <i class="fas fa-cart-shopping" style="color: #ffd200"></i>
+        </a>
+    </div>
 
     <!-- Contenido específico de cada página -->
     <div id="content">
-      
-        <nav>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/productos/">Productos</a></li>
-                <!-- Agrega más elementos de menú según sea necesario -->
-            </ul>
-        </nav>
-    <a href="/carrito" title="Ir al carrito de compras">
-        <i  class="fas fa-cart-shopping"></i>
-    </a>
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </div>
 
 

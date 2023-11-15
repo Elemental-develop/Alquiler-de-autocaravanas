@@ -12,10 +12,9 @@
 
 
     <!-- Barra de búsqueda -->
-    <form method="post" action="{% url 'buscador' %}">
-        {% csrf_token %}
+    <form method="get">
         <label for="id_query">Buscar:</label>
-        <input type="text" name="query" id="id_query" value="{{ form.query }}">
+        <input type="text" name="buscar" placeholder="Buscar..." class="form-control"></input>
         <button type="submit">Buscar</button>
     </form>
 

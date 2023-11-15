@@ -31,9 +31,8 @@
 </head>
 
 <body>
-    <h2>Catálogo de Autocaravanas de Alquiler</h2>
+    <h2>Detalles de la autocaravana {{ producto.nombre }}</h2>
     <ul>
-        {% for producto in productos %}
         <table>
             <tr>
                 <td>
@@ -41,13 +40,13 @@
                 </td>
                 <td>
                     <h3>{{ producto.nombre }}</h3>
+                    <p>{{ producto.marca }}</p>
+                    <p>{{ producto.modelo }}</p>
                     <p>{{ producto.descripcion }}</p>
                     <p>Precio: ${{ producto.precio }}</p>
-                    <a class="btn-link" href="/productos/{{producto.id}}">Más información</a>
                 </td>
             </tr>
         </table>
-        {% endfor %}
     </ul>
 </body>
 

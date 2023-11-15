@@ -19,13 +19,23 @@
         }
 
         td:first-child {
-            width: 300px; 
+            width: 300px;
         }
 
         img {
             max-width: 100%;
             height: auto;
             border-radius: 5px;
+        }
+
+        .agotado-message {
+            color: red;
+            font-weight: bold;
+            float: right;
+            font-size: 30px;
+            margin-right: 10px;
+            margin-top: 0px;
+
         }
     </style>
 </head>
@@ -40,7 +50,10 @@
                     <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
                 </td>
                 <td>
-                    <h3>{{ producto.nombre }}</h3>
+                    <h3>{{ producto.nombre }} </h3>
+                    {% if producto.unidades == 0 %}
+                    <p class="agotado-message">¡Agotado!</p>
+                    {% endif %}
                     <p>{{ producto.descripcion }}</p>
                     <p>Precio: ${{ producto.precio }}</p>
                     <a class="btn-link" href="/productos/{{producto.id}}">Más información</a>
@@ -50,5 +63,10 @@
         {% endfor %}
     </ul>
 </body>
+
+</html>
+    </style>
+</head>
+
 
 </html>

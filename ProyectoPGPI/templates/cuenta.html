@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+<body>
+    {% block content %}
+
+    <h1>Detalles del Usuario</h1>
+
+    <p>Nombre de usuario: {{ user.username }}</p>
+    <p>Correo electrónico: {{ user.email }}</p>
+    <p>Fecha de registro: {{ user.date_joined }}</p>
+    <a href="/logout/">Logout</a>      
+
+    {% endblock %}
+</body>

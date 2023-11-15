@@ -23,6 +23,7 @@ class Command(BaseCommand):
                 modelo = f'Modelo {i}',
                 descripcion = f'Descripción {i}',
                 precio = i*1000+25*i,
+                unidades = i*2,
                 imagen = 'https://phantom-expansion.unidadeditorial.es/6ead8f7540efd52167440444bd610040/resize/828/f/jpg/assets/multimedia/imagenes/2023/01/10/16733818691897.jpg'
             )
 

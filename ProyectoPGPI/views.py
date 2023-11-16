@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from producto.models import Producto
 from django.db.models import Q
@@ -67,3 +68,10 @@ def logout_cuenta(request):
     logout(request)
     return redirect('home')
 
+def obtener_producto(request, producto_id):
+    try:
+        producto = Producto.objects.get(id=producto_id)
+        data = {'id': producto.id, 'nombre': producto.nombre, 'precio': producto.precio}
+        return JsonResponse(data)
+    except Producto.DoesNotExist:
+        return JsonResponse({'error': 'Producto no encontrado'}, status=404)

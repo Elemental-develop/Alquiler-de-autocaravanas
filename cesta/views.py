@@ -1,6 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Producto, Carrito, ItemCarrito
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
+
+
+@login_required
 def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, pk=producto_id)
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
@@ -12,6 +17,7 @@ def agregar_al_carrito(request, producto_id):
 
     return redirect('ver_carrito')
 
+@login_required
 def ver_carrito(request):
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()

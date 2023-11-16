@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from producto.views import lista_productos, detalles_producto
-from .views import home, registro, cuenta, logout_cuenta
+from .views import home, obtener_producto, registro, cuenta, logout_cuenta
 
 
 urlpatterns = [
@@ -29,7 +29,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/register/', registro, name="registro"),
     path('cuenta/', cuenta, name='cuenta'),
-    path('logout/', logout_cuenta, name='logout')
+    path('logout/', logout_cuenta, name='logout'),
+    path('obtener_producto/<int:producto_id>/', obtener_producto)
+
+    
 
 ]
 

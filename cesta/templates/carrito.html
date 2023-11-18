@@ -4,14 +4,14 @@
 <h2>Carrito de Compras</h2>
 
 <form method="post" action="{% url 'realizar_pedido' %}">
+  {% csrf_token %}
   <ul>
     {% for item in items %}
     <li>
       {{ item.producto.nombre }} -
-      Cantidad: <input style="width: 70px" type="number" class="cantidad-input" data-item-id="{{ item.id }}"
-        value="{{ item.cantidad }}" min="0"> -
+      Cantidad: <input style="width: 70px" type="number" name="cantidad_{{ item.id }}" value="{{ item.cantidad }}" min="0">
       Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span>
-      <input type="hidden" class="item-id" value="{{ item.producto.id }}">
+      <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
     </li>
     {% endfor %}
   </ul>
@@ -23,11 +23,11 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const cantidadInputs = document.querySelectorAll('.cantidad-input');
+    const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
     cantidadInputs.forEach(input => {
       input.addEventListener('change', function () {
-        const itemId = this.getAttribute('data-item-id');
-        const productoId = this.closest('li').querySelector('.item-id').value;
+        const itemId = this.name.replace("cantidad_", "");
+        const productoId = document.querySelector(`input[name="producto_id_${itemId}"]`).value;
         const nuevaCantidad = this.value;
         const subtotalElement = document.querySelector(`#subtotal-${itemId}`);
 
@@ -36,7 +36,7 @@
 
           subtotalElement.textContent = nuevoSubtotal.toFixed(2);
           actualizarTotal();
-          guardarCarritoEnLocalStorage(); // Guardar el carrito en localStorage al cambiar la cantidad
+          guardarCarritoEnLocalStorage();
         });
       });
     });
@@ -65,11 +65,11 @@
 
     function guardarCarritoEnLocalStorage() {
       const carrito = [];
-      const items = document.querySelectorAll('.cantidad-input');
+      const items = document.querySelectorAll('input[name^="cantidad_"]');
       items.forEach(item => {
-        const itemId = item.getAttribute('data-item-id');
+        const itemId = item.name.replace("cantidad_", "");
         const cantidad = item.value;
-        const productoId = item.closest('li').querySelector('.item-id').value;
+        const productoId = document.querySelector(`input[name="producto_id_${itemId}"]`).value;
         const subtotal = document.querySelector(`#subtotal-${itemId}`).textContent;
 
         carrito.push({
@@ -88,7 +88,7 @@
     if (storedCarrito) {
       const carritoData = JSON.parse(storedCarrito);
       carritoData.forEach(item => {
-        const input = document.querySelector(`.cantidad-input[data-item-id="${item.itemId}"]`);
+        const input = document.querySelector(`input[name="cantidad_${item.itemId}"]`);
         if (input) {
           input.value = item.cantidad;
           document.querySelector(`#subtotal-${item.itemId}`).textContent = item.subtotal;

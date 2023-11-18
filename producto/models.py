@@ -8,6 +8,8 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     imagen = models.URLField()
     unidades = models.IntegerField(default=0)
+    capacidad_viajar = models.IntegerField(default=0)
+    capacidad_dormir = models.IntegerField(default=0)
 
 
     def str(self):

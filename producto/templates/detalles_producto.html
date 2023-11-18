@@ -39,6 +39,8 @@
             border-radius: 5px;
             display: inline-block;
         }
+
+
     </style>
 </head>
 {% extends 'base.html' %}
@@ -48,6 +50,11 @@
     <div class="product-details">
         <h2>Detalles de la autocaravana {{ producto.nombre }}</h2>
         <img class="product-image" src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+
+        {% if producto.oferta != None %}
+        <h4 class="agotado-message">¡En oferta!</h4>
+        {% endif %}
+
         <h3>{{ producto.nombre }}</h3>
         {% if producto.unidades == 0 %}
         <p class="agotado-message">¡Agotado!</p>
@@ -55,19 +62,37 @@
         {% if producto.unidades <= 5 and producto.unidades > 0 %}
             <p class="agotado-message">¡Sólo quedan {{ producto.unidades }} unidades!</p>
             {% endif %}
-            <p class="subtitulo" style="display: inline;">{{ producto.precio }} €/día</p>
+
+            {% if producto.oferta != None %}
+            <h4><del>{{ producto.precio }} €/día</del></h4>
+            {% endif %}
+
+            {% if producto.oferta != None %}
+            <p class="subtitulo" style="display: inline;">{{ producto.precio_rebajado }} €/día</p>
+            {% if producto.unidades != 0 %}
             <p class="icono" style="display: inline; margin-left: 10px;">
                 <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
                     <i class="fas fa-cart-plus icono"></i>
                 </a>
             </p>
+            {% endif %}
+            {% else %}
+            <p class="subtitulo" style="display: inline;">{{ producto.precio }} €/día</p>
+            {% if producto.unidades != 0 %}
+            <p class="icono" style="display: inline; margin-left: 10px;">
+                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
+                    <i class="fas fa-cart-plus icono"></i>
+                </a>
+            </p>
+            {% endif %}
+            {% endif %}
 
             <h4>Marca: {{ producto.marca }}<h4>
-            <h4>Modelo: {{ producto.modelo }}</h4>
-            <h4>Capacidad: Viajar {{ producto.capacidad_viajar }} / Dormir {{ producto.capacidad_dormir }}</h4>
+                    <h4>Modelo: {{ producto.modelo }}</h4>
+                    <h4>Capacidad: Viajar {{ producto.capacidad_viajar }} / Dormir {{ producto.capacidad_dormir }}</h4>
 
-            <p class="subtitulo">Descripción</p>
-            <p>{{ producto.descripcion }}</p>
+                    <p class="subtitulo">Descripción</p>
+                    <p>{{ producto.descripcion }}</p>
     </div>
     {% endblock%}
 </body>

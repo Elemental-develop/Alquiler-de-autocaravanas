@@ -47,7 +47,8 @@ MODULES = [
    
     'buscador',
     'producto',
-    'cesta'
+    'cesta',
+    'oferta',
 
 ]
 

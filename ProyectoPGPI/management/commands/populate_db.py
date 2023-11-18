@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
+from oferta.models import Oferta
 from producto.models import Producto
 
 class Command(BaseCommand):
@@ -15,6 +16,19 @@ class Command(BaseCommand):
                 password=get_random_string(length=50)
             )
 
+        Oferta.objects.create(
+            porcentaje = 20,
+        )
+
+        Oferta.objects.create(
+            porcentaje = 15,
+        )
+
+        Oferta.objects.create(
+            porcentaje = 30,
+        )
+
+
         Producto.objects.create(
             nombre = 'Autocaravana de alquiler Benimar 340 UP',
             marca = 'Benimar',
@@ -24,7 +38,9 @@ class Command(BaseCommand):
             unidades = 0,
             imagen = 'https://mundovan.com/wp-content/uploads/2022/12/Foto-delantera-627x485.jpg',
             capacidad_viajar = 5,
-            capacidad_dormir = 5
+            capacidad_dormir = 5,
+            oferta = Oferta.objects.get(pk=1)
+
         )
 
         Producto.objects.create(
@@ -36,7 +52,9 @@ class Command(BaseCommand):
             unidades = 7,
             imagen = 'https://mundovan.com/wp-content/uploads/2023/03/Autocaravana-de-alquiler-Giottiline-Siena-385-Privilege-627x485.jpg',
             capacidad_viajar = 6,
-            capacidad_dormir = 4
+            capacidad_dormir = 4,
+            oferta = Oferta.objects.get(pk=2)
+
         )
             
         Producto.objects.create(
@@ -48,7 +66,9 @@ class Command(BaseCommand):
             unidades = 3,
             imagen = 'https://mundovan.com/wp-content/uploads/2023/07/Autocaravana-alquiler-Sunlight-T65-627x485.jpg',
             capacidad_viajar = 5,
-            capacidad_dormir = 4
+            capacidad_dormir = 4,
+            oferta = Oferta.objects.get(pk=3)
+
         )
 
         Producto.objects.create(
@@ -230,5 +250,6 @@ class Command(BaseCommand):
             capacidad_viajar = 7,
             capacidad_dormir = 7
         )
+
 
         self.stdout.write(self.style.SUCCESS('Database populated successfully!'))

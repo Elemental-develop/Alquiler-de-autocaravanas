@@ -8,7 +8,7 @@
     <style>
         .product {
             width: 300px;
-            height: 550px;
+            height: 600px;
             margin: 10px;
             border: 3px solid #8d021f;
             border-radius: 5px;
@@ -31,7 +31,7 @@
             background-color: #f9f9f9;
             height: calc(100% - 220px);
             overflow: auto;
-            
+
         }
 
         .message {
@@ -52,6 +52,10 @@
             border-radius: 5px;
             display: inline-block;
         }
+
+        .precio-tachado {
+            text-decoration: line-through;
+        }
     </style>
 
 </head>
@@ -65,27 +69,38 @@
         <div class="product">
             <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
             <div class="product-info">
+
+                {% if producto.oferta != None %}
+                <h4 class="message">¡En oferta!</h4>
+                {% endif %}
+
                 <h3>{{ producto.nombre }}</h3>
                 {% if producto.unidades == 0 %}
                 <h4 class="message">¡Agotado!</h4>
                 {% endif %}
                 {% if producto.unidades <= 5 and producto.unidades > 0 %}
-                    <h4 class="message">¡Sólo quedan {{ producto.unidades }} unidades!</h44>
+                    <h4 class="message">¡Sólo quedan {{ producto.unidades }} unidades!</h4>
                         {% endif %}
+
+
+                        {% if producto.oferta != None %}
+                        <h4><del>{{ producto.precio }} €/día</del> {{ producto.precio_rebajado }} €/día</h4>
+                        {% else %}
                         <h4>{{ producto.precio }} €/día</h4>
+                        {% endif %}
+
                         <p class="icono"><i class="fas fa-car-side"></i> {{ producto.capacidad_viajar }} viajar</p>
                         <p class="icono"><i class="fas fa-bed"></i> {{ producto.capacidad_dormir }} dormir</p>
                         <div>
-                        <p class="icono">
-                            <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
-                                <i class="fas fa-cart-plus icono"></i>
-                            </a>
-                        </p></div>
-                        
+                            {% if producto.unidades != 0 %}
+                            <p class="icono" style="display: inline; margin-left: 10px;">
+                                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
+                                    <i class="fas fa-cart-plus icono"></i>
+                                </a>
+                            </p>
+                            {% endif %}
+                        </div>
                         <h5><a class="btn-link" href="/productos/{{producto.id}}">Más información</a></h5>
-
-
-                        
             </div>
         </div>
         {% endfor %}

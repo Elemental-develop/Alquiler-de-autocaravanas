@@ -3,35 +3,40 @@
 {% block content %}
 <h2>Carrito de Compras</h2>
 
-<ul>
-  {% for item in items %}
-  <li>
-    {{ item.producto.nombre }} -
-    Cantidad: <input style="width: 70px" type="number" class="cantidad-input" data-item-id="{{ item.id }}"
-      value="{{ item.cantidad }}" min="0"> -
-    Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span>
-    <input type="hidden" class="item-id" value="{{ item.producto.id }}">
-  </li>
-  {% endfor %}
-</ul>
+<form method="post" action="{% url 'realizar_pedido' %}">
+  <ul>
+    {% for item in items %}
+    <li>
+      {{ item.producto.nombre }} -
+      Cantidad: <input style="width: 70px" type="number" class="cantidad-input" data-item-id="{{ item.id }}"
+        value="{{ item.cantidad }}" min="0"> -
+      Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span>
+      <input type="hidden" class="item-id" value="{{ item.producto.id }}">
+    </li>
+    {% endfor %}
+  </ul>
+
+  <button type="submit">Realizar pedido</button>
+</form>
 
 <p>Total: <span id="total">{{ carrito.calcular_total }}</span></p>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const cantidadInputs = document.querySelectorAll('.cantidad-input');
     cantidadInputs.forEach(input => {
       input.addEventListener('change', function () {
         const itemId = this.getAttribute('data-item-id');
-        const productoId = this.closest('li').querySelector('.item-id').value; // Corregir la clase a '.item-id'
+        const productoId = this.closest('li').querySelector('.item-id').value;
         const nuevaCantidad = this.value;
         const subtotalElement = document.querySelector(`#subtotal-${itemId}`);
 
-        obtenerPrecioProducto(productoId, function(precioProducto) {
+        obtenerPrecioProducto(productoId, function (precioProducto) {
           const nuevoSubtotal = precioProducto * nuevaCantidad;
 
           subtotalElement.textContent = nuevoSubtotal.toFixed(2);
           actualizarTotal();
+          guardarCarritoEnLocalStorage(); // Guardar el carrito en localStorage al cambiar la cantidad
         });
       });
     });
@@ -56,6 +61,40 @@
         total += parseFloat(subtotal.textContent);
       });
       document.querySelector('#total').textContent = total.toFixed(2);
+    }
+
+    function guardarCarritoEnLocalStorage() {
+      const carrito = [];
+      const items = document.querySelectorAll('.cantidad-input');
+      items.forEach(item => {
+        const itemId = item.getAttribute('data-item-id');
+        const cantidad = item.value;
+        const productoId = item.closest('li').querySelector('.item-id').value;
+        const subtotal = document.querySelector(`#subtotal-${itemId}`).textContent;
+
+        carrito.push({
+          itemId,
+          cantidad,
+          productoId,
+          subtotal,
+        });
+      });
+
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+    }
+
+    // Cargar el carrito desde localStorage al cargar la página
+    const storedCarrito = localStorage.getItem('carrito');
+    if (storedCarrito) {
+      const carritoData = JSON.parse(storedCarrito);
+      carritoData.forEach(item => {
+        const input = document.querySelector(`.cantidad-input[data-item-id="${item.itemId}"]`);
+        if (input) {
+          input.value = item.cantidad;
+          document.querySelector(`#subtotal-${item.itemId}`).textContent = item.subtotal;
+        }
+      });
+      actualizarTotal();
     }
   });
 </script>

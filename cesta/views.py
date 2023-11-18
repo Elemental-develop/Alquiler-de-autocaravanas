@@ -25,28 +25,33 @@ def ver_carrito(request):
     return render(request, 'carrito.html', {'carrito': carrito, 'items': items})
 
 
+@login_required
 def realizar_pedido(request):
     if request.method == "POST":
-        # Procesar los datos del formulario
         user = request.user
         carrito, created = Carrito.objects.get_or_create(usuario=user)
-        items = []
 
-        for key, value in request.POST.items():
-            if key.startswith("cantidad_"):
-                producto_id = key.replace("cantidad_", "")
-                cantidad = int(value)
-                producto = Producto.objects.get(pk=producto_id)
-                item, created = ItemCarrito.objects.get_or_create(carrito=carrito, producto=producto)
-                item.cantidad = cantidad
-                item.save()
-                items.append(item)
+        # Almacenamos en diccionario datos del formulario para
+        # manejarlos de manera comoda
+        dicc = {}
 
-        # Actualizar el carrito con los nuevos elementos
-        carrito.items.set(items)
-        carrito.save()
+        for clave, valor in request.POST.items():
+            if clave.startswith("producto_id_"):
+                id = int(clave.split("producto_id_")[1])
+                dicc[id] = [valor]
+        
+        for clave, valor in request.POST.items():
+            if clave.startswith("cantidad_"):
+                id = int(clave.split("cantidad_")[1])
+                dicc[id].append(valor)
 
+        # Sincronizamos cantidades en la DB
+        for producto_id, cantidad in dicc.values():
+            producto = Producto.objects.get(pk=producto_id)
+            item, created = ItemCarrito.objects.get_or_create(carrito=carrito, producto=producto)
+            item.cantidad = cantidad
+            item.save()
+        
+        # Cambiar a una template de la siguiente fase
+        # de la compra
         return HttpResponse("Pedido realizado con éxito!")
-    else:
-
-        return HttpResponse("Error al realizar el pedido!")

@@ -51,6 +51,32 @@
         #content {
             padding: 20px;
         }
+        
+        .pie-pagina {
+            background-color: #8d021f;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .columna-izquierda {
+            flex: 0 0 calc(50% - 10px);
+        }
+
+        .columna-derecha {
+           flex: 0 0 calc(50% - 10px);
+        }       
+
+        .informacion-contacto,
+        .detalles-legales {
+            margin-bottom: 10px;
+        }
+
     </style>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -102,4 +128,39 @@
     <div id="content">
         {% block content %}{% endblock %}
     </div>
+
+    <footer class="pie-pagina">
+        <div class="columna-izquierda">
+            <p class="icono">
+                <a class="btn-link" href="https://www.facebook.com/">
+                    <i class="fab fa-facebook-square icono"></i>
+                </a>
+            </p>
+            <p class="icono">
+                <a class="btn-link" href="https://www.instagram.com/">
+                    <i class="fab fa-instagram icono"></i>
+                </a>
+            </p>
+            <p class="icono">
+                <a class="btn-link" href="https://www.twitter.com/">
+                    <i class="fab fa-twitter icono"></i>
+                </a>
+            </p>
+            <p>Descubre tu aventura sobre ruedas con nosotros.</p>
+            <p>Tu próximo viaje inolvidable está a solo un paso de distancia.</p>
+
+        </div>
+    
+        <div class="columna-derecha">
+            <div class="informacion-contacto">
+                <p>Dirección: Av. de la Reina Mercedes, s/n, 41012 Sevilla</p>
+                <p>Teléfono: 954 55 68 17</p>
+                <p>Email: alquiler-autocaravanas@us.es</p>
+            </div>
+    
+            <div class="detalles-legales">
+                <p>&copy; 2023 Alquiler de autocaravanas. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
 </body>

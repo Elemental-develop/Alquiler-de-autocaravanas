@@ -13,7 +13,16 @@ class Producto(models.Model):
     capacidad_viajar = models.IntegerField(default=0)
     capacidad_dormir = models.IntegerField(default=0)
     oferta = models.ForeignKey(Oferta, on_delete=models.CASCADE, null=True, default=None)
+    opiniones = models.CharField(max_length=1000, blank=True, default=',')
 
+    def agregar_opinion(self, nueva_opinion):
+        # Método para agregar una nueva opinión a la autocaravana
+        if self.opiniones:
+            self.opiniones += f",{nueva_opinion}"
+        else:
+            self.opiniones = nueva_opinion
+        self.save()
+        
     def precio_rebajado(self):
         return float(self.precio) - float(self.oferta.porcentaje)/100. * float(self.precio)
 

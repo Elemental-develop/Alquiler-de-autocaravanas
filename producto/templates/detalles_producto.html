@@ -94,6 +94,31 @@
                     <p class="subtitulo">Descripción</p>
                     <p>{{ producto.descripcion }}</p>
     </div>
+    <div class="product-details">
+        <!-- ... (resto del contenido existente) ... -->
+
+
+        <!-- Agrega esta sección solo si el usuario está autenticado -->
+        <div class="opiniones-section">
+            <h4>Opiniones de Usuarios</h4>
+            {% if producto.opiniones %}
+                <ul>
+                    {% for opinion in opiniones %}
+                        <li>{{ opinion }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No hay opiniones disponibles.</p>
+            {% endif %}
+            <div class="opiniones-section">
+                <h4>Deja tu Opinión</h4>
+                <form method="post" action="{% url 'detalles_producto' producto.id %}">
+                    {% csrf_token %}
+                    {{ opinion_form }}                   
+                     <button type="submit">Enviar Opinión</button>
+                </form>
+            </div>
+
     {% endblock%}
 </body>
 

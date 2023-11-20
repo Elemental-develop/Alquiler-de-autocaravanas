@@ -1,10 +1,22 @@
 from django import forms
-from .models import DatosPedido
+from .models import DatosPedido, FormaEntrega
 
 class DatosPedidoForm(forms.ModelForm):
+    
+    FORMAS_ENTREGA = [
+        (FormaEntrega.ESTANDAR, 'Estándar'),
+        (FormaEntrega.URGENTE, 'Urgente'),
+        (FormaEntrega.VEINTICUATRO_HORAS, '24 horas'),
+    ]
+
+    forma_entrega = forms.ChoiceField(
+        choices=FORMAS_ENTREGA,
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        label='Forma de Entrega*'
+    )
     class Meta:
         model = DatosPedido
-        fields = ['email', 'first_name', 'last_name', 'telefono', 'direccion_envio', 'direccion_facturacion', 'instrucciones_entrega']
+        fields = ['email', 'first_name', 'last_name', 'telefono', 'direccion_envio', 'direccion_facturacion', 'instrucciones_entrega', 'forma_entrega']
         
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -12,9 +24,6 @@ class DatosPedidoForm(forms.ModelForm):
         
         user = self.request.user
         if user.is_authenticated:
-            print("===DATOS USER")
-            print(user.email)
-            # Consultar los datos existentes en la base de datos y autorellenar los campos
                 
             # Aqui se autorrellena el formulario con informacion de la db
             db_data = {}
@@ -28,15 +37,7 @@ class DatosPedidoForm(forms.ModelForm):
             for field, value in db_data.items():
                 form_fields[field].initial = value
                 form_fields[field].required = True
-            
-            print("="*30)    
-            print(form_fields["email"].initial)
                 
             # Campo no requerido
             form_fields["instrucciones_entrega"].required = False
-                
-            
-            """ for field_name, field in self.fields.items():
-                if field_name != 'instrucciones_entrega' and db_data.get(field_name):
-                    field.initial = db_data[field_name]
-                    field.required = False  # No es necesario que el campo sea obligatorio si se autorellena """
+

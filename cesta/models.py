@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from django.db import models
 from producto.models import Producto
 from django.contrib.auth.models import User
@@ -17,8 +18,22 @@ class ItemCarrito(models.Model):
     def calcular_subtotal(self):
         return self.producto.precio * self.cantidad
 
+
+class FormaEntrega(models.TextChoices):
+    ESTANDAR = 'EST', 'Estándar'
+    URGENTE = 'URG', 'Urgente'
+    VEINTICUATRO_HORAS = '24H', '24 horas'
+    
+    
 class DatosPedido(models.Model):
     carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE)
+
+    forma_entrega = models.CharField(
+        max_length=5,
+        choices=FormaEntrega.choices,
+        default=FormaEntrega.ESTANDAR,
+    )
+    
     telefono = models.CharField(max_length=20)
     direccion_envio = models.CharField(max_length=150)
     direccion_facturacion = models.CharField(max_length=150)
@@ -31,3 +46,4 @@ class DatosPedido(models.Model):
 
     def __str__(self):
         return f'Datos de Pedido para el Carrito {self.carrito.id}'
+    

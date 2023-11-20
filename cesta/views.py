@@ -61,6 +61,7 @@ def procesar_pedido(request):
     if request.method == 'POST':
         form = DatosPedidoForm(request.POST, request=request)
         print("=== ANTES VALIDACION")
+        print(form.errors)
         if form.is_valid():
             print("=== VALIDADO")
             

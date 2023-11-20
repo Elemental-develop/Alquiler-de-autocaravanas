@@ -1,84 +1,12 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
 <head>
-
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
-    <style>
-        .fa-cart-shopping {
-            font-size: 36px;
-            color: #ffd200
-        }
-
-        .fa-user {
-            font-size: 36px;
-            color: #ffd200;
-        }
-
-        #navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #8d021f;
-            padding: 10px;
-            color: white;
-        }
-
-        #search-bar {
-            display: flex;
-            align-items: center;
-        }
-
-        #search-bar label {
-            margin-right: 10px;
-        }
-
-        #search-bar input {
-            margin-right: 10px;
-        }
-
-        #nav-links {
-            display: flex;
-        }
-
-        #nav-links a {
-            margin-right: 20px;
-            text-decoration: none;
-            color: white;
-        }
-
-        #nav-links a:hover {
-            text-decoration: underline;
-        }
-
-        #content {
-            padding: 20px;
-        }
-        
-        .pie-pagina {
-            background-color: #8d021f;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            bottom: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .columna-izquierda {
-            flex: 0 0 calc(50% - 10px);
-        }
-
-        .columna-derecha {
-           flex: 0 0 calc(50% - 10px);
-        }       
-
-        .informacion-contacto,
-        .detalles-legales {
-            margin-bottom: 10px;
-        }
-
-    </style>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
 </head>
 
 <body>
@@ -125,10 +53,12 @@
         </div>
     </div>
 
+    <!-- Contenido -->
     <div id="content">
         {% block content %}{% endblock %}
     </div>
 
+    <!-- Pie de página -->
     <footer class="pie-pagina">
         <div class="columna-izquierda">
             <p class="icono">
@@ -163,4 +93,6 @@
             </div>
         </div>
     </footer>
+
 </body>
+</html>

@@ -49,6 +49,7 @@ MODULES = [
     'producto',
     'cesta',
     'oferta',
+    'datos_entrega',
 
 ]
 

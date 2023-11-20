@@ -1,8 +1,10 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from producto.models import Producto
+from datos_entrega.models import DatosEntrega
 from django.db.models import Q
 from ProyectoPGPI.forms import CustomUserCreationForm, UserProfileForm
+from datos_entrega.forms import DatosEntregaForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -60,7 +62,9 @@ def registro(request):
 
 @login_required
 def cuenta(request):
-    return render(request, "cuenta.html", {'user': request.user})
+    datos_entrega = get_object_or_404(DatosEntrega, user=request.user)
+
+    return render(request, 'cuenta.html', {'user': request.user, 'datos_entrega': datos_entrega})
 
 @login_required
 def logout_cuenta(request):
@@ -77,12 +81,31 @@ def obtener_producto(request, producto_id):
 
 @login_required
 def editar_perfil(request):
+    try:
+        datos_entrega = DatosEntrega.objects.get(user=request.user)
+    except DatosEntrega.DoesNotExist:
+        datos_entrega = None
+
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
+        user_form = UserProfileForm(request.POST, instance=request.user)
+        datos_entrega_form = DatosEntregaForm(request.POST, instance=datos_entrega)
+
+        if user_form.is_valid() and datos_entrega_form.is_valid():
+            user_form.save()
+
+            if datos_entrega_form.is_bound and datos_entrega is not None:
+                datos_entrega_form.save()
+            elif datos_entrega_form.is_bound and datos_entrega is None:
+                # Si no hay datos_entrega existentes, crea uno nuevo
+                datos_entrega_obj = datos_entrega_form.save(commit=False)
+                datos_entrega_obj.user = request.user
+                datos_entrega_obj.save()
+
             return redirect('cuenta')
     else:
-        form = UserProfileForm(instance=request.user)
+        user_form = UserProfileForm(instance=request.user)
+        datos_entrega_form = DatosEntregaForm(instance=datos_entrega)
 
-    return render(request, 'editar_perfil.html', {'form': form})
+    return render(request, 'editar_perfil.html', {'user_form': user_form, 'datos_entrega_form': datos_entrega_form})
+
+

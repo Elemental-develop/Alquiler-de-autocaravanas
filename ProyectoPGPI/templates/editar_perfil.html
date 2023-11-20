@@ -7,7 +7,13 @@
 
     <form method="post" action="">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div>
+            {{ user_form.as_p }}
+        </div>
+        <div style="margin-top: 40px;"></div>
+        <div>
+            {{ datos_entrega_form.as_p }}
+        </div>
         <button type="submit">Guardar cambios</button>
     </form>
 

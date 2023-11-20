@@ -1,46 +1,28 @@
 {% extends 'base.html' %}
-{% load static %}
-
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
-    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi cuenta</title>
-</head>
-
 <body>
     {% block content %}
-    <div class="banner">
-        <h4>Detalles del usuario</h4>
-    </div>
+    
+    <h1>Detalles del Usuario</h1>
+    <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+    <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+    <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+    <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+    <p><strong>Fecha de registro:</strong> {{ user.date_joined }}</p>
+    <br>
 
-    <form method="post">
-        {% csrf_token %}
-        <div class="pagina-centrada-cuenta">
-            <label for="username">Nombre de usuario:</label>
-            <input type="text" id="username" name="username" value="{{ user.username }}" required>
-       
-            <label for="email">Correo electrónico:</label>
-            <input type="email" id="email" name="email" value="{{ user.email }}" required>
-       
-            <label for="first_name">Nombre:</label>
-            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
-       
-            <label for="last_name">Apellidos:</label>
-            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
-       
-            <button type="submit">Guardar cambios</button>
-        </div>
-    </form>
-
-    <div class="pagina-centrada-cuenta">
-        <a href="/logout/">Cerrar sesión</a>
+    <h2>Datos de Entrega</h2>
+    <p><strong>Dirección de entrega:</strong> {{ datos_entrega.direccion_entrega|default:"" }}</p>
+    <p><strong>Ciudad:</strong> {{ datos_entrega.ciudad|default:"" }}</p>
+    <p><strong>Código Postal:</strong> {{ datos_entrega.codigo_postal|default:"" }}</p>
+    <br>
+    
+    <h2>Datos de Pago</h2>
+    <p><strong>Método de Pago:</strong> {{ datos_entrega.metodo_pago|default:"No especificado" }}</p>
+    <br>
+    <div style="display: flex; gap: 100px;">
+        <a href="{% url 'editar_perfil' %}">Editar Perfil</a>
+        <a href="/logout/">Logout</a>
     </div>
+  
     {% endblock %}
 </body>
-
-</html>

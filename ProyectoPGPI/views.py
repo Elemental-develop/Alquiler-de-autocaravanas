@@ -62,7 +62,7 @@ def registro(request):
 
 @login_required
 def cuenta(request):
-    datos_entrega = get_object_or_404(DatosEntrega, user=request.user)
+    datos_entrega = DatosEntrega.objects.filter(user=request.user).first()
 
     return render(request, 'cuenta.html', {'user': request.user, 'datos_entrega': datos_entrega})
 

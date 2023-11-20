@@ -1,112 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
     <title>Detalles</title>
-    <style>
-
-    .product {
-            width: 300px;
-            height: 600px;
-            margin: 10px;
-            border: 3px solid #8d021f;
-            border-radius: 5px;
-            overflow: hidden;
-            display: inline-block;
-            box-sizing: border-box;
-            text-align: center;
-        }
-
-        .product-details {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .product-details h1 {
-            color: #8d021f;
-            margin-bottom: 10px;
-        }
-
-        .product-image {
-            max-width: 100%;
-            border: 4px solid #8d021f;
-            border-radius: 5px;
-        }
-
-        .message {
-            color: #8d021f;
-            font-weight: bold;
-            font-size: 30px;
-            margin-top: 0px;
-        }
-
-        .subtitulo {
-            color: #8d021f;
-            font-weight: bold;
-            font-size: 20px;
-            margin-top: 0px;
-        }
-
-        .icono {
-            background-color: #ffd200;
-            color: #8d021f;
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
- 
-
-        .product img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin: 10px;
-        }
-
-        .product-info {
-            padding: 10px;
-            background-color: #f9f9f9;
-            height: calc(100% - 220px);
-            overflow: auto;
-
-        }
-
-        .product-info p {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-
-        .sugerencias {
-            overflow-x: auto;
-            white-space: nowrap;
-            padding-bottom: 20px;
-            text-align: center;
-        }
-
-        .message-sugerencia {
-            color: #8d021f;
-            font-weight: bold;
-            margin-top: 0;
-        }
-        
-        .product-info h3 {
-            white-space: normal;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 7;
-            -webkit-box-orient: vertical;
-            margin: 0;
-        }
-
-        
-    </style>
 </head>
-{% extends 'base.html' %}
 
 <body>
     {% block content %}
@@ -116,15 +19,15 @@
         <img class="product-image" src="{{ producto_seleccionado.imagen }}" alt="{{ producto_seleccionado.nombre }}">
 
         {% if producto_seleccionado.oferta != None %}
-        <h4 class="message">¡En oferta!</h4>
+        <h4 class="message-details">¡En oferta!</h4>
         {% endif %}
 
         <h3>{{ producto_seleccionado.nombre }}</h3>
         {% if producto_seleccionado.unidades == 0 %}
-        <p class="message">¡Agotado!</p>
+        <p class="message-details">¡Agotado!</p>
         {% endif %}
         {% if producto_seleccionado.unidades <= 5 and producto_seleccionado.unidades > 0 %}
-            <p class="message">¡Sólo quedan {{ producto_seleccionado.unidades }} unidades!</p>
+            <p class="message-details">¡Sólo quedan {{ producto_seleccionado.unidades }} unidades!</p>
             {% endif %}
 
             {% if producto_seleccionado.oferta != None %}
@@ -153,11 +56,13 @@
 
             <h4>Marca: {{ producto_seleccionado.marca }}<h4>
             <h4>Modelo: {{ producto_seleccionado.modelo }}</h4>
-            <h4>Capacidad: Viajar {{ producto_seleccionado.capacidad_viajar }} / Dormir {{ producto_seleccionado.capacidad_dormir }}</h4>
 
-                    <p class="subtitulo">Descripción</p>
-                    <p>{{ producto_seleccionado.descripcion }}</p>
-                    <p class="subtitulo">Sugerencias</p>
+            <p class="icono"><i class="fas fa-car-side"></i> {{ producto_seleccionado.capacidad_viajar }} viajar</p>
+            <p class="icono"><i class="fas fa-bed"></i> {{ producto_seleccionado.capacidad_dormir }} dormir</p>
+
+            <p class="subtitulo">Descripción</p>
+            <p>{{ producto_seleccionado.descripcion }}</p>
+            <p class="subtitulo">Sugerencias</p>
 
     </div>
 

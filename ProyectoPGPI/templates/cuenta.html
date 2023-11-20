@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 <body>
     {% block content %}
-
+    
     <h1>Detalles del Usuario</h1>
     <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
     <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
@@ -23,6 +23,6 @@
         <a href="{% url 'editar_perfil' %}">Editar Perfil</a>
         <a href="/logout/">Logout</a>
     </div>
-
+  
     {% endblock %}
 </body>

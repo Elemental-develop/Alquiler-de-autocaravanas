@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from producto.models import Producto
 from django.db.models import Q
-from ProyectoPGPI.forms import CustomUserCreationForm
+from ProyectoPGPI.forms import CustomUserCreationForm, UserProfileForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 
@@ -74,3 +74,15 @@ def obtener_producto(request, producto_id):
         return JsonResponse(data)
     except Producto.DoesNotExist:
         return JsonResponse({'error': 'Producto no encontrado'}, status=404)
+
+@login_required
+def editar_perfil(request):
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('cuenta')
+    else:
+        form = UserProfileForm(instance=request.user)
+
+    return render(request, 'editar_perfil.html', {'form': form})

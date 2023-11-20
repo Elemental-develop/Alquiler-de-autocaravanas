@@ -4,10 +4,16 @@
 
     <h1>Detalles del Usuario</h1>
 
-    <p>Nombre de usuario: {{ user.username }}</p>
-    <p>Correo electrónico: {{ user.email }}</p>
-    <p>Fecha de registro: {{ user.date_joined }}</p>
-    <a href="/logout/">Logout</a>      
+    <p><strong>Nombre de usuario:</strong> {{ user.username }}</p>
+    <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+    <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+    <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+    <p><strong>Fecha de registro:</strong> {{ user.date_joined }}</p>
+    <br>
+    <div style="display: flex; gap: 100px;">
+        <a href="{% url 'editar_perfil' %}">Editar Perfil</a>
+        <a href="/logout/">Logout</a>
+    </div>
 
     {% endblock %}
 </body>

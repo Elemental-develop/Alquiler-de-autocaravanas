@@ -101,15 +101,37 @@
         <!-- Agrega esta sección solo si el usuario está autenticado -->
         <div class="opiniones-section">
             <h4>Opiniones de Usuarios</h4>
+            
             {% if producto.opiniones %}
-                <ul>
-                    {% for opinion in opiniones %}
-                        <li>{{ opinion }}</li>
+                
+
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Opinión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario, opinion in usuarios_opiniones %}
+                        <tr>
+                            <td>{{ usuario }}</td>
+                            <td>{{ opinion }}</td>
+                        </tr>
                     {% endfor %}
-                </ul>
+                </tbody>
+            </table>
+
+
+
+
+
+                
             {% else %}
                 <p>No hay opiniones disponibles.</p>
             {% endif %}
+
             <div class="opiniones-section">
                 <h4>Deja tu Opinión</h4>
                 <form method="post" action="{% url 'detalles_producto' producto.id %}">

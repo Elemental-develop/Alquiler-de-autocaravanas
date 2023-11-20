@@ -1,0 +1,45 @@
+<!-- templates/cesta/pedido_form.html -->
+<form method="post" action="{% url 'procesar_pedido' %}">
+    {% csrf_token %}
+
+    <!-- Sección 1: Información del Usuario -->
+    <div class="seccion-usuario">
+        <h2>Información del Usuario</h2>
+        <label for="{{ form.email.id_for_label }}">Email*:</label>
+        <input type="email" name="{{ form.email.name }}" value="{{ form.email.initial|default:'' }}" id="{{ form.email.id_for_label }}">
+
+        <label for="{{ form.first_name.id_for_label }}">Nombre*:</label>
+        <input type="first_name" name="{{ form.first_name.name }}" value="{{ form.first_name.initial|default:'' }}" id="{{ form.first_name.id_for_label }}">
+
+        <label for="{{ form.last_name.id_for_label }}">Apellidos*:</label>
+        <input type="last_name" name="{{ form.last_name.name }}" value="{{ form.last_name.initial|default:'' }}" id="{{ form.last_name.id_for_label }}">
+    </div>
+
+    <!-- Sección 2: Información del Pedido -->
+    <div class="seccion-pedido">
+        <h2>Información del Pedido</h2>
+        <label for="{{ form.telefono.id_for_label }}">Teléfono*:</label>
+        {{ form.telefono }}
+        <label for="{{ form.direccion_envio.id_for_label }}">Dirección de Envío*:</label>
+        {{ form.direccion_envio }}
+        <label for="{{ form.direccion_facturacion.id_for_label }}">Dirección de Facturación*:</label>
+        {{ form.direccion_facturacion }}
+        <label for="{{ form.instrucciones_entrega.id_for_label }}">Instrucciones de Entrega:</label>
+        {{ form.instrucciones_entrega }}
+    </div>
+
+    <button type="submit">Proceder a pago</button>
+</form>
+
+<span>*Obligatorio</span>
+
+<h2>Productos</h2>
+  <ul>
+    {% for item in items %}
+    <li>
+      {{ item.producto.nombre }} -
+      Cantidad (días): {{ item.cantidad }}
+       - Subtotal: {{ item.calcular_subtotal }} €
+    </li>
+    {% endfor %}
+  </ul>

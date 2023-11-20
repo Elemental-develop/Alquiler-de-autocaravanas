@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from cesta.forms import DatosPedidoForm
 from .models import Producto, Carrito, ItemCarrito
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
-
-
 
 @login_required
 def agregar_al_carrito(request, producto_id):
@@ -54,4 +54,37 @@ def realizar_pedido(request):
         
         # Cambiar a una template de la siguiente fase
         # de la compra
-        return HttpResponse("Pedido realizado con éxito!")
+        return redirect('procesar_pedido')
+
+@login_required
+def procesar_pedido(request):
+    if request.method == 'POST':
+        form = DatosPedidoForm(request.POST, request=request)
+        print("=== ANTES VALIDACION")
+        if form.is_valid():
+            print("=== VALIDADO")
+            
+            datos_pedido = form.save(commit=False)
+            carrito = Carrito.objects.get(usuario=request.user)
+            # Asigna el carrito actual
+            print("====DATOS PEDIDO")
+            print(carrito)
+            datos_pedido.carrito = carrito
+            
+            print(datos_pedido)
+            datos_pedido.save()
+            return HttpResponse('PÁGINA DE PAGO')  # Reemplaza con la URL adecuada
+    else:
+        form = DatosPedidoForm(request.POST, request=request)
+
+    # GET
+    
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    items = carrito.items.all()
+    
+    return render(request, 'procesar_pedido.html', {'form': form, 'items': items})
+
+    def get_form_kwargs(self):
+            kwargs = super().get_form_kwargs()
+            kwargs['request'] = self.request
+            return kwargs

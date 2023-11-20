@@ -9,7 +9,7 @@
     {% for item in items %}
     <li>
       {{ item.producto.nombre }} -
-      Cantidad: <input style="width: 70px" type="number" name="cantidad_{{ item.id }}" value="{{ item.cantidad }}" min="0">
+      Cantidad (días): <input style="width: 70px" type="number" name="cantidad_{{ item.id }}" value="{{ item.cantidad }}" min="0">
       Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span>
       <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
     </li>

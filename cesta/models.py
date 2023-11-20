@@ -16,3 +16,18 @@ class ItemCarrito(models.Model):
 
     def calcular_subtotal(self):
         return self.producto.precio * self.cantidad
+
+class DatosPedido(models.Model):
+    carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE)
+    telefono = models.CharField(max_length=20)
+    direccion_envio = models.CharField(max_length=150)
+    direccion_facturacion = models.CharField(max_length=150)
+    instrucciones_entrega = models.TextField()
+
+    # Agrega campos del User asociado al Carrito
+    email = models.EmailField(default="")
+    first_name = models.CharField(max_length=30, default="")
+    last_name = models.CharField(max_length=30, default="")
+
+    def __str__(self):
+        return f'Datos de Pedido para el Carrito {self.carrito.id}'

@@ -75,7 +75,7 @@
 
 .product {
     width: 300px;
-    height: 600px;
+    height: 550px;
     margin: 10px;
     border: 3px solid #8d021f;
     border-radius: 5px;
@@ -130,6 +130,15 @@
     display: inline-block;
 }
 
+.icono-cuenta {
+    background-color: #ffd200;
+    color: #8d021f;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
 .precio-tachado {
     text-decoration: line-through;
 }
@@ -144,8 +153,33 @@
 
 }
 
+.banner-categorias {
+    background-color: #8d021f;
+    color: white;
+    font-size: 25px;
+    text-align: center;
+    font-weight: bold;
+    padding: 20px;
+
+}
+
+.banner-categorias p,
 .banner p {
     animation: blink 1s linear infinite;
+}
+
+.banner-categorias a,
+.banner a {
+    color: white;   
+    text-decoration: none;
+
+}
+
+.banner-categorias h6,
+.banner h5 {
+    display: inline;
+    padding: 30px;
+    font-size: 20px;
 }
 
 @keyframes blink {
@@ -198,10 +232,15 @@
     margin-bottom: 10px;
 }
 
-.pagina-centrada-cuenta p,
 .pagina-centrada-productos p {
     font-size: 1.1em;
     line-height: 1.5;
+}
+
+.pagina-centrada-cuenta p {
+    font-size: 1.1em;
+    line-height: 0.5;
+    margin-bottom: 0px; 
 }
 
 .pagina-centrada-cuenta a:hover {
@@ -252,4 +291,13 @@
     margin-top: 0;
 }
 
+.h1 {
+    color: #8d021f;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    text-align: center;
+}
 
+h5 a.btn-link {
+    color: #8d021f;
+}

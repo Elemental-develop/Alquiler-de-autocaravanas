@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+<body>
+    {% block content %}
+
+    <h1>Editar Perfil</h1>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <div>
+            {{ user_form.as_p }}
+        </div>
+        <div style="margin-top: 40px;"></div>
+        <div>
+            {{ datos_entrega_form.as_p }}
+        </div>
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+    <a href="{% url 'cuenta' %}">Cancelar</a>
+
+    {% endblock %}
+</body>

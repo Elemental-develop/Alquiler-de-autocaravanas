@@ -1,98 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
     <title>Detalles</title>
-    <style>
-        .product-details {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .product-image {
-            max-width: 100%;
-            border: 4px solid #8d021f;
-            border-radius: 5px;
-        }
-
-        .agotado-message {
-            color: #8d021f;
-            font-weight: bold;
-            font-size: 30px;
-            margin-top: 0px;
-        }
-
-        .subtitulo {
-            color: #8d021f;
-            font-weight: bold;
-            font-size: 20px;
-            margin-top: 0px;
-        }
-
-        .icono {
-            background-color: #ffd200;
-            color: #8d021f;
-            padding: 5px 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-
-
-    </style>
 </head>
-{% extends 'base.html' %}
 
 <body>
     {% block content %}
+    
     <div class="product-details">
-        <h2>Detalles de la autocaravana {{ producto.nombre }}</h2>
-        <img class="product-image" src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+        <h1>Detalles de la autocaravana {{ producto_seleccionado.nombre }}</h1>
+        <img class="product-image" src="{{ producto_seleccionado.imagen }}" alt="{{ producto_seleccionado.nombre }}">
 
-        {% if producto.oferta != None %}
-        <h4 class="agotado-message">¡En oferta!</h4>
+        {% if producto_seleccionado.oferta != None %}
+        <h4 class="message-details">¡En oferta!</h4>
         {% endif %}
 
-        <h3>{{ producto.nombre }}</h3>
-        {% if producto.unidades == 0 %}
-        <p class="agotado-message">¡Agotado!</p>
+        <h3>{{ producto_seleccionado.nombre }}</h3>
+        {% if producto_seleccionado.unidades == 0 %}
+        <p class="message-details">¡Agotado!</p>
         {% endif %}
-        {% if producto.unidades <= 5 and producto.unidades > 0 %}
-            <p class="agotado-message">¡Sólo quedan {{ producto.unidades }} unidades!</p>
+        {% if producto_seleccionado.unidades <= 5 and producto_seleccionado.unidades > 0 %}
+            <p class="message-details">¡Sólo quedan {{ producto_seleccionado.unidades }} unidades!</p>
             {% endif %}
 
-            {% if producto.oferta != None %}
-            <h4><del>{{ producto.precio }} €/día</del></h4>
+            {% if producto_seleccionado.oferta != None %}
+            <h4><del>{{ producto_seleccionado.precio }} €/día</del></h4>
             {% endif %}
 
-            {% if producto.oferta != None %}
-            <p class="subtitulo" style="display: inline;">{{ producto.precio_rebajado }} €/día</p>
-            {% if producto.unidades != 0 %}
+            {% if producto_seleccionado.oferta != None %}
+            <p class="subtitulo" style="display: inline;">{{ producto_seleccionado.precio_rebajado }} €/día</p>
+            {% if producto_seleccionado.unidades != 0 %}
             <p class="icono" style="display: inline; margin-left: 10px;">
-                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
+                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto_seleccionado.id}}">
                     <i class="fas fa-cart-plus icono"></i>
                 </a>
             </p>
             {% endif %}
             {% else %}
-            <p class="subtitulo" style="display: inline;">{{ producto.precio }} €/día</p>
-            {% if producto.unidades != 0 %}
+            <p class="subtitulo" style="display: inline;">{{ producto_seleccionado.precio }} €/día</p>
+            {% if producto_seleccionado.unidades != 0 %}
             <p class="icono" style="display: inline; margin-left: 10px;">
-                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
+                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto_seleccionado.id}}">
                     <i class="fas fa-cart-plus icono"></i>
                 </a>
             </p>
             {% endif %}
             {% endif %}
 
-            <h4>Marca: {{ producto.marca }}<h4>
-                    <h4>Modelo: {{ producto.modelo }}</h4>
-                    <h4>Capacidad: Viajar {{ producto.capacidad_viajar }} / Dormir {{ producto.capacidad_dormir }}</h4>
+            <h4>Marca: {{ producto_seleccionado.marca }}<h4>
+            <h4>Modelo: {{ producto_seleccionado.modelo }}</h4>
 
-                    <p class="subtitulo">Descripción</p>
-                    <p>{{ producto.descripcion }}</p>
+            <p class="icono"><i class="fas fa-car-side"></i> {{ producto_seleccionado.capacidad_viajar }} viajar</p>
+            <p class="icono"><i class="fas fa-bed"></i> {{ producto_seleccionado.capacidad_dormir }} dormir</p>
+
+            <p class="subtitulo">Descripción</p>
+            <p>{{ producto_seleccionado.descripcion }}</p>
+            <p class="subtitulo">Sugerencias</p>
+
+    </div>
+
+
+    <div class="sugerencias">
+       
+        {% for producto in productos %}
+
+        {% if producto_seleccionado.marca == producto.marca and producto_seleccionado.id != producto.id %}        
+            <div class="product">
+                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+                <div class="product-info">
+
+                    {% if producto.oferta != None %}
+                        <h4 class="message-sugerencia">¡En oferta!</h4>
+                    {% endif %}
+
+                    <h3>{{ producto.nombre }}</h3>
+                    
+                    {% if producto.unidades == 0 %}
+                        <h4 class="message-sugerencia">¡Agotado!</h4>
+                    {% endif %}
+                    
+                    {% if producto.unidades <= 5 and producto.unidades > 0 %}
+                        <h4 class="message-sugerencia">¡Sólo quedan {{ producto.unidades }} unidades!</h4>
+                    {% endif %}
+
+                    {% if producto.oferta != None %}
+                        <h4><del>{{ producto.precio }} €/día</del> {{ producto.precio_rebajado }} €/día</h4>
+                    {% else %}
+                        <h4>{{ producto.precio }} €/día</h4>
+                    {% endif %}
+
+                    <p class="icono"><i class="fas fa-car-side"></i> {{ producto.capacidad_viajar }} viajar</p>
+                    <p class="icono"><i class="fas fa-bed"></i> {{ producto.capacidad_dormir }} dormir</p>
+                            
+                    <div>
+                        {% if producto.unidades != 0 %}
+                            <p class="icono" style="display: inline; margin-left: 10px;">
+                                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
+                                    <i class="fas fa-cart-plus icono"></i>
+                                </a>
+                            </p>
+                        {% endif %}       
+                    </div>
+                            
+                    <h5><a class="btn-link" href="/productos/{{producto.id}}">Más información</a></h5>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if producto_seleccionado.capacidad_viajar == producto.capacidad_viajar and producto_seleccionado.capacidad_dormir == producto.capacidad_dormir and producto_seleccionado.marca != producto.marca and producto_seleccionado.id != producto.id %}        
+            <div class="product">
+                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}">
+                <div class="product-info">
+
+                    {% if producto.oferta != None %}
+                        <h4 class="message-sugerencia">¡En oferta!</h4>
+                    {% endif %}
+
+                    <h3>{{ producto.nombre }}</h3>
+                    
+                    {% if producto.unidades == 0 %}
+                        <h4 class="message-sugerencia">¡Agotado!</h4>
+                    {% endif %}
+                    
+                    {% if producto.unidades <= 5 and producto.unidades > 0 %}
+                        <h4 class="message-sugerencia">¡Sólo quedan {{ producto.unidades }} unidades!</h4>
+                    {% endif %}
+
+                    {% if producto.oferta != None %}
+                        <h4><del>{{ producto.precio }} €/día</del> {{ producto.precio_rebajado }} €/día</h4>
+                    {% else %}
+                        <h4>{{ producto.precio }} €/día</h4>
+                    {% endif %}
+
+                    <p class="icono"><i class="fas fa-car-side"></i> {{ producto.capacidad_viajar }} viajar</p>
+                    <p class="icono"><i class="fas fa-bed"></i> {{ producto.capacidad_dormir }} dormir</p>
+                            
+                    <div>
+                        {% if producto.unidades != 0 %}
+                            <p class="icono" style="display: inline; margin-left: 10px;">
+                                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
+                                    <i class="fas fa-cart-plus icono"></i>
+                                </a>
+                            </p>
+                        {% endif %}       
+                    </div>
+                            
+                    <h5><a class="btn-link" href="/productos/{{producto.id}}">Más información</a></h5>
+                </div>
+            </div>
+        {% endif %}
+        
+        {% endfor %}
+
     </div>
     <div class="product-details">
         <!-- ... (resto del contenido existente) ... -->
@@ -142,6 +208,6 @@
             </div>
 
     {% endblock%}
-</body>
 
+</body>
 </html>

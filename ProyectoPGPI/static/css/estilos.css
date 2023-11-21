@@ -278,6 +278,14 @@
     margin-top: 0px;
 }
 
+.subtitulo-centrado {
+    color: #8d021f;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
 .sugerencias {
     overflow-x: auto;
     white-space: nowrap;
@@ -300,4 +308,24 @@
 
 h5 a.btn-link {
     color: #8d021f;
+}
+
+.tabla-opiniones {
+    width: 100%;
+    max-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.tabla-opiniones th,
+.tabla-opiniones td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+    word-wrap: break-word;
+}
+
+.opinion-form {
+    display: flex;
+    flex-direction: column;
 }

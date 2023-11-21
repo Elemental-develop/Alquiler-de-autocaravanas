@@ -20,11 +20,12 @@ def lista_productos(request):
 
 
 def detalles_producto(request, producto_id):
-    producto = get_object_or_404(Producto, pk=producto_id)
+    productos = Producto.objects.all()
+    producto_seleccionado = get_object_or_404(Producto, pk=producto_id)
     lista_opiniones = []
     lista_usuarios = []
 
-    for opinion in producto.opiniones.split(','):
+    for opinion in producto_seleccionado.opiniones.split(','):
         if ';*' in opinion:
             usuario = opinion.split(';*')[1]
         else:
@@ -40,7 +41,7 @@ def detalles_producto(request, producto_id):
             nueva_opinion = form.cleaned_data['opinion']
             if request.user.is_authenticated:
                 nueva_opinion = f'{nueva_opinion};*{request.user.username}'
-            producto.agregar_opinion(nueva_opinion)
+            producto_seleccionado.agregar_opinion(nueva_opinion)
 
             print(nueva_opinion)
             if ';*' in nueva_opinion:
@@ -60,6 +61,6 @@ def detalles_producto(request, producto_id):
 
     usuarios_opiniones = list(zip(lista_usuarios, lista_opiniones))
     
-    return render(request, 'detalles_producto.html', {'producto': producto, 'opinion_form': form, 'opiniones': lista_opiniones, 'usuarios': lista_usuarios, 'usuarios_opiniones': usuarios_opiniones})
+    return render(request, 'detalles_producto.html', {'productos': productos, 'producto_seleccionado': producto_seleccionado, 'opinion_form': form, 'opiniones': lista_opiniones, 'usuarios': lista_usuarios, 'usuarios_opiniones': usuarios_opiniones})
    
 

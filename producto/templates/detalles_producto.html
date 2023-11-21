@@ -62,10 +62,39 @@
 
             <p class="subtitulo">Descripción</p>
             <p>{{ producto_seleccionado.descripcion }}</p>
-            <p class="subtitulo">Sugerencias</p>
 
     </div>
 
+    <div class="pagina-centrada-cuenta">
+        <p class="subtitulo">Opiniones de otros usuarios</p>
+
+
+        {% if usuarios_opiniones %}
+
+            <table class="tabla-opiniones">
+                {% for usuario, opinion in usuarios_opiniones %}
+                    <tr>
+                        <td>{{ usuario }}</td>
+                        <td>{{ opinion }}</td>
+                    </tr>
+                {% endfor %}
+            </table>    
+        {% else %}
+            <h4>No hay opiniones disponibles</h4>
+        {% endif %}
+
+        <p class="subtitulo">Deja tu opinión</p>
+
+            <form method="post" action="{% url 'detalles_producto' producto_seleccionado.id %}">
+                {% csrf_token %}
+                <div class="opinion-form">
+                    {{ opinion_form.opinion }}
+                    <button type="submit" class="icono-cuenta">Publicar</button>
+                </div>
+            </form>
+    </div>
+
+    <p class="subtitulo-centrado">Sugerencias</p>
 
     <div class="sugerencias">
        
@@ -158,55 +187,7 @@
         {% endif %}
         
         {% endfor %}
-
     </div>
-    <div class="product-details">
-        <!-- ... (resto del contenido existente) ... -->
-
-
-        <!-- Agrega esta sección solo si el usuario está autenticado -->
-        <div class="opiniones-section">
-            <h4>Opiniones de Usuarios</h4>
-            
-            {% if producto.opiniones %}
-                
-
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Usuario</th>
-                        <th>Opinión</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for usuario, opinion in usuarios_opiniones %}
-                        <tr>
-                            <td>{{ usuario }}</td>
-                            <td>{{ opinion }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-
-
-
-
-                
-            {% else %}
-                <p>No hay opiniones disponibles.</p>
-            {% endif %}
-
-            <div class="opiniones-section">
-                <h4>Deja tu Opinión</h4>
-                <form method="post" action="{% url 'detalles_producto' producto.id %}">
-                    {% csrf_token %}
-                    {{ opinion_form }}                   
-                     <button type="submit">Enviar Opinión</button>
-                </form>
-            </div>
-
     {% endblock%}
 
 </body>

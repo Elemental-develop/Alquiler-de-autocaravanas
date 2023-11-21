@@ -31,7 +31,8 @@ urlpatterns = [
     path('cuenta/', cuenta, name='cuenta'),
     path('cuenta/editar_perfil/', editar_perfil, name='editar_perfil'),
     path('logout/', logout_cuenta, name='logout'),
-    path('obtener_producto/<int:producto_id>/', obtener_producto)
+    path('obtener_producto/<int:producto_id>/', obtener_producto),
+    path('autocaravana/<int:producto_id>/', detalles_producto, name='detalles_producto'),
 
     
 

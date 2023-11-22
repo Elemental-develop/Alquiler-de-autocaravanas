@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from cesta.forms import DatosPedidoForm
-from .models import Producto, Carrito, ItemCarrito
+from cesta.forms import DatosPagoForm, DatosPedidoForm
+from .models import Producto, Carrito, ItemCarrito, DatosPedido
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 
@@ -60,21 +60,36 @@ def realizar_pedido(request):
 def procesar_pedido(request):
     if request.method == 'POST':
         form = DatosPedidoForm(request.POST, request=request)
-        print("=== ANTES VALIDACION")
-        print(form.errors)
+
         if form.is_valid():
-            print("=== VALIDADO")
             
             datos_pedido = form.save(commit=False)
             carrito = Carrito.objects.get(usuario=request.user)
-            # Asigna el carrito actual
-            print("====DATOS PEDIDO")
-            print(carrito)
-            datos_pedido.carrito = carrito
-            
-            print(datos_pedido)
-            datos_pedido.save()
-            return HttpResponse('PÁGINA DE PAGO')  # Reemplaza con la URL adecuada
+
+            # Intenta obtener un DatosPedido existente asociado al Carrito
+            try:
+                datos_pedido_existente = DatosPedido.objects.get(carrito=carrito)
+            except DatosPedido.DoesNotExist:
+                datos_pedido_existente = None
+
+            # Actualiza o crea un nuevo DatosPedido según sea necesario
+            if datos_pedido_existente:
+                # Si existe, actualiza los campos
+                datos_pedido_existente.email = form.cleaned_data['email']
+                datos_pedido_existente.first_name = form.cleaned_data['first_name']
+                datos_pedido_existente.last_name = form.cleaned_data['last_name']
+                datos_pedido_existente.direccion_envio = form.cleaned_data['direccion_envio']
+                datos_pedido_existente.direccion_facturacion = form.cleaned_data['direccion_facturacion']
+                datos_pedido_existente.instrucciones_entrega = form.cleaned_data['instrucciones_entrega']
+                datos_pedido_existente.forma_entrega = form.cleaned_data['forma_entrega']
+                datos_pedido_existente.telefono = form.cleaned_data['telefono']
+                # Otros campos que desees actualizar
+                datos_pedido_existente.save()
+            else:
+                # Si no existe, crea uno nuevo
+                datos_pedido.carrito = carrito
+                datos_pedido.save()
+            return redirect('procesar_pago')  # Reemplaza con la URL adecuada
     else:
         form = DatosPedidoForm(request.POST, request=request)
 
@@ -89,3 +104,31 @@ def procesar_pedido(request):
             kwargs = super().get_form_kwargs()
             kwargs['request'] = self.request
             return kwargs
+
+@login_required
+def procesar_pago(request):
+    if request.method == 'POST':
+        form = DatosPagoForm()
+        if form.is_valid():
+            
+            datos_pedido = form.save(commit=False)
+
+            datos_pedido.save()
+            return HttpResponse('PEDIDO CONFIRMADO')  # Reemplaza con la URL adecuada
+    else:
+        form = DatosPagoForm()
+
+    # GET
+    
+    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    items = carrito.items.all()
+    
+    return render(request, 'procesar_pago.html', {'form': form, 'items': items})
+
+    def get_form_kwargs(self):
+            kwargs = super().get_form_kwargs()
+            kwargs['request'] = self.request
+            return kwargs
+        
+        
+

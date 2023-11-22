@@ -1,5 +1,5 @@
 from django import forms
-from .models import DatosPedido, FormaEntrega
+from .models import DatosPedido, FormaEntrega, FormaPago
 
 class DatosPedidoForm(forms.ModelForm):
     
@@ -41,3 +41,13 @@ class DatosPedidoForm(forms.ModelForm):
             # Campo no requerido
             form_fields["instrucciones_entrega"].required = False
 
+
+class DatosPagoForm(forms.ModelForm):
+    
+    FORMAS_PAGO = [
+        (FormaPago.CONTRARREEMBOLSO, 'Contrareembolso')
+    ]
+    
+    class Meta:
+        model = DatosPedido
+        fields = ['forma_pago']

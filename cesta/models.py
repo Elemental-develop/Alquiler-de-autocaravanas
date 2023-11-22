@@ -23,10 +23,14 @@ class FormaEntrega(models.TextChoices):
     ESTANDAR = 'EST', 'Estándar'
     URGENTE = 'URG', 'Urgente'
     VEINTICUATRO_HORAS = '24H', '24 horas'
+
+
+class FormaPago(models.TextChoices):
+    CONTRARREEMBOLSO = 'CONT', 'Contrareembolso'
     
     
 class DatosPedido(models.Model):
-    carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE)
+    carrito = models.OneToOneField(Carrito, on_delete=models.CASCADE)
 
     forma_entrega = models.CharField(
         max_length=5,
@@ -34,7 +38,13 @@ class DatosPedido(models.Model):
         default=FormaEntrega.ESTANDAR,
     )
     
-    telefono = models.CharField(max_length=20)
+    forma_pago = models.CharField(
+        max_length=10,
+        choices=FormaPago.choices,
+        default=FormaPago.CONTRARREEMBOLSO
+    )
+    
+    telefono = models.CharField(max_length=12)
     direccion_envio = models.CharField(max_length=150)
     direccion_facturacion = models.CharField(max_length=150)
     instrucciones_entrega = models.TextField()
@@ -46,4 +56,28 @@ class DatosPedido(models.Model):
 
     def __str__(self):
         return f'Datos de Pedido para el Carrito {self.carrito.id}'
+
+
+class Pedido(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    telefono = models.CharField(max_length=12)
+    direccion_envio = models.CharField(max_length=150)
+    direccion_facturacion = models.CharField(max_length=150)
+    instrucciones_entrega = models.TextField()
     
+    email = models.EmailField(default="")
+    first_name = models.CharField(max_length=30, default="")
+    last_name = models.CharField(max_length=30, default="")
+    
+    forma_entrega = models.CharField(
+        max_length=5,
+        choices=FormaEntrega.choices,
+        default=FormaEntrega.ESTANDAR,
+    )
+    
+    forma_pago = models.CharField(
+        max_length=10,
+        choices=FormaPago.choices,
+        default=FormaPago.CONTRARREEMBOLSO
+    )

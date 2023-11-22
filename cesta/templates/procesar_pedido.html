@@ -13,13 +13,13 @@
 
         <label for="{{ form.last_name.id_for_label }}">Apellidos*:</label>
         <input required type="last_name" name="{{ form.last_name.name }}" value="{{ form.last_name.initial|default:'' }}" id="{{ form.last_name.id_for_label }}">
+        <label for="{{ form.telefono.id_for_label }}">Teléfono*:</label>
+        {{ form.telefono }}
     </div>
 
     <!-- Sección 2: Información del Pedido -->
     <div class="seccion-pedido">
         <h2>Información del Pedido</h2>
-        <label for="{{ form.telefono.id_for_label }}">Teléfono*:</label>
-        {{ form.telefono }}
         <label for="{{ form.direccion_envio.id_for_label }}">Dirección de Envío*:</label>
         {{ form.direccion_envio }}
         <label for="{{ form.direccion_facturacion.id_for_label }}">Dirección de Facturación*:</label>

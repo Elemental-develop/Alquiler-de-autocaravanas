@@ -2,6 +2,7 @@ from enum import Enum, auto
 from django.db import models
 from producto.models import Producto
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Carrito(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -58,6 +59,11 @@ class DatosPedido(models.Model):
         return f'Datos de Pedido para el Carrito {self.carrito.id}'
 
 
+class Estado(models.TextChoices):
+    LISTO = 'LISTO', 'Listo'
+    CONFIRMADO = 'CONFIRMADO', 'Confirmado'
+    EN_PROCESO = 'EN_PROCESO', 'En proceso'
+
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -81,3 +87,18 @@ class Pedido(models.Model):
         choices=FormaPago.choices,
         default=FormaPago.CONTRARREEMBOLSO
     )
+    
+    # Nuevo campo para productos (en formato JSON)
+    productos = models.TextField(default="")
+
+    # Nueva fecha de creación
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    # Nuevo campo para el estado
+    estado = models.CharField(
+        max_length=15,
+        choices=Estado.choices,
+        default=Estado.EN_PROCESO
+    )
+    
+    precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)

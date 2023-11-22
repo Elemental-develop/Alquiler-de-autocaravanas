@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
 from cesta.forms import DatosPagoForm, DatosPedidoForm
-from .models import Producto, Carrito, ItemCarrito, DatosPedido
+from .models import Pedido, Producto, Carrito, ItemCarrito, DatosPedido
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+
+import json
 
 @login_required
 def agregar_al_carrito(request, producto_id):
@@ -108,15 +110,50 @@ def procesar_pedido(request):
 @login_required
 def procesar_pago(request):
     if request.method == 'POST':
-        form = DatosPagoForm()
+        form = DatosPagoForm(request.POST)
+        print("====PREVALID")
         if form.is_valid():
+            print("====VALID")
             
-            datos_pedido = form.save(commit=False)
+            datos_pago = form.save(commit=False)
+            # form.cleaned_data['forma_pago']
+            carrito = Carrito.objects.get(usuario=request.user)
+            datos_pedido = DatosPedido.objects.get(carrito=carrito)
+            
+            productos = []
+            
+            for item in carrito.items.all():
+                producto_info = {
+                    'id': item.producto.id,
+                    'nombre': item.producto.nombre,
+                    'precio': float(item.producto.precio),  # Convertir Decimal a float
+                    'cantidad': item.cantidad,
+                    'subtotal': float(item.calcular_subtotal()),  # Convertir Decimal a float
+                }
+                productos.append(producto_info)
+            
+            
+            
+            
+            pedido = Pedido(
+                usuario=request.user,
+                telefono=datos_pedido.telefono,
+                direccion_envio=datos_pedido.direccion_envio,
+                direccion_facturacion=datos_pedido.direccion_facturacion,
+                instrucciones_entrega=datos_pedido.instrucciones_entrega,
+                email=datos_pedido.email,
+                first_name=datos_pedido.first_name,
+                last_name=datos_pedido.last_name,
+                forma_entrega=datos_pedido.forma_entrega,
+                forma_pago=datos_pedido.forma_pago,
+                productos=json.dumps(productos),
+                precio=carrito.calcular_total()
+            )
 
-            datos_pedido.save()
+            pedido.save()
             return HttpResponse('PEDIDO CONFIRMADO')  # Reemplaza con la URL adecuada
     else:
-        form = DatosPagoForm()
+        form = DatosPagoForm(request.POST)
 
     # GET
     

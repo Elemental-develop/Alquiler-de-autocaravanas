@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from django.utils.crypto import get_random_string
 from oferta.models import Oferta
 from producto.models import Producto
+from django.contrib.auth.hashers import make_password, check_password
 
 class Command(BaseCommand):
     help = 'Populate the database with sample data'
@@ -10,11 +10,35 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Populating the database...'))
 
-        for i in range(10):
-            User.objects.create(
-                username=f'Usuario {i}',
-                password=get_random_string(length=50)
-            )
+        User.objects.create(
+            username='alejandro@gmail.com',
+            email='alejandro@gmail.com',
+            password = make_password('alejandropass123')
+        )
+
+        User.objects.create(
+            username='daniel@gmail.com',
+            email='daniel@gmail.com',
+            password = make_password('danielpass123')
+        )
+
+        User.objects.create(
+            username='rafael@gmail.com',
+            email='rafael@gmail.com',
+            password = make_password('rafaelpass123')
+        )
+
+        User.objects.create(
+            username='juancarlos@gmail.com',
+            email='juancarlos@gmail.com',
+            password = make_password('juancarlospass123')
+        )
+
+        User.objects.create(
+            username='maria@gmail.com',
+            email='maria@gmail.com',
+            password = make_password('mariapass123')
+        )        
 
         Oferta.objects.create(
             porcentaje = 20,

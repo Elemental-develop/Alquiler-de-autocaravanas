@@ -107,5 +107,3 @@ def editar_perfil(request):
         datos_entrega_form = DatosEntregaForm(instance=datos_entrega)
 
     return render(request, 'editar_perfil.html', {'user_form': user_form, 'datos_entrega_form': datos_entrega_form})
-
-

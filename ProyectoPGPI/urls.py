@@ -33,9 +33,6 @@ urlpatterns = [
     path('logout/', logout_cuenta, name='logout'),
     path('obtener_producto/<int:producto_id>/', obtener_producto),
     path('autocaravana/<int:producto_id>/', detalles_producto, name='detalles_producto'),
-
-    
-
 ]
 
 for module in settings.MODULES:

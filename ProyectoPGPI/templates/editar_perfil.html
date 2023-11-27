@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+
+<body>
+    {% block content %}
+
+    <h1 class="h1">Editar Perfil</h1>
+
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="pagina-centrada-cuenta">
+                {{ user_form.as_p }}
+            </div>
+
+            <div class="pagina-centrada-cuenta">
+                {{ datos_entrega_form.as_p }}
+            </div>
+            
+            <div class="pagina-centrada-productos">
+                <button type="submit" class="icono-cuenta">Guardar cambios</button>
+            </div>
+
+        </form>
+
+            <div class="pagina-centrada-productos">
+                <a href="{% url 'cuenta' %}" class="icono-cuenta">Cancelar</a>
+            </div>
+
+    {% endblock %}
+</body>
+</html> 

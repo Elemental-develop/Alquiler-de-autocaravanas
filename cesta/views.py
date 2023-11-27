@@ -100,7 +100,7 @@ def procesar_pedido(request):
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()
     
-    return render(request, 'procesar_pedido.html', {'form': form, 'items': items})
+    return render(request, 'procesar_pedido.html', {'form': form, 'items': items, 'carrito': carrito})
 
     def get_form_kwargs(self):
             kwargs = super().get_form_kwargs()

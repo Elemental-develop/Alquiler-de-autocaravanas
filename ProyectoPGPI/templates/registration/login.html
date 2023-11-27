@@ -1,28 +1,45 @@
-{% block content %}
-  <div class="container mt-5">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-header bg-primary text-white">
-            <h2>Inicio de Sesión</h2>
-          </div>
-          <div class="card-body">
-            <form method="post" class="form-signin">
-              {% csrf_token %}
+{% extends 'base.html' %}
+{% load static %}
 
-              <label for="id_username">Email:</label>
-              {{ form.username }}
-              <label for="id_password">Contraseña:</label>
-              {{ form.password }}
+<!DOCTYPE html>
+<html lang="es">
 
-              <button type="submit">Iniciar Sesión</button>
-              
-              <p>¿No tienes cuenta? <a href="/accounts/register/">Regístrate aquí</a></p>
-              
-            </form>
-          </div>
-        </div>
-      </div>
+<head>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+  <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión</title>
+</head>
+
+<body>
+  {% block content %}
+
+  <h1 class="h1">Iniciar Sesión </h1>
+
+  <div class="pagina-centrada-productos">
+    <div class="contenedor-logo">
+      <img src="{% static 'images/logo.png' %}" alt="Logo de la empresa" class="logo-empresa">
+    </div>
+
+    <div class="pagina-centrada-cuenta">
+      <form method="post" class="form-signin">
+        {% csrf_token %}
+
+        <p><label for="id_username">Email:</label>
+          {{ form.username }}</p>
+        <p><label for="id_password">Contraseña:</label>
+          {{ form.password }}</p>
+
+        <p><button class="icono-cuenta" type="submit">Iniciar Sesión</button></p>
+
+        <p>¿No tienes cuenta? </p>
+        <p></p>
+        <a href="/accounts/register/" class="icono-cuenta">Regístrate aquí</a>
+      </form>
     </div>
   </div>
-{% endblock %}
+  {% endblock %}
+</body>
+
+</html>

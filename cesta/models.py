@@ -11,6 +11,9 @@ class Carrito(models.Model):
     def calcular_total(self):
         return sum(item.calcular_subtotal() for item in self.items.all())
     
+    def limpiar_carrito(self):
+        self.productos.clear()
+
 class ItemCarrito(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
@@ -28,6 +31,7 @@ class FormaEntrega(models.TextChoices):
 
 class FormaPago(models.TextChoices):
     CONTRARREEMBOLSO = 'CONT', 'Contrareembolso'
+    STRIPE = 'STRIPE', 'Pago con Stripe'
     
     
 class DatosPedido(models.Model):
@@ -60,9 +64,9 @@ class DatosPedido(models.Model):
 
 
 class Estado(models.TextChoices):
-    LISTO = 'LISTO', 'Listo'
+    ENTREGADO = 'ENTREGADO', 'Entregado'
     CONFIRMADO = 'CONFIRMADO', 'Confirmado'
-    EN_PROCESO = 'EN_PROCESO', 'En proceso'
+    PENDIENTE = 'PENDIENTE', 'Pendiente'
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -98,7 +102,7 @@ class Pedido(models.Model):
     estado = models.CharField(
         max_length=15,
         choices=Estado.choices,
-        default=Estado.EN_PROCESO
+        default=Estado.PENDIENTE
     )
     
     precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)

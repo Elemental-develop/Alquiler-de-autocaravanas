@@ -1,0 +1,13 @@
+<!-- templates/cesta/procesar_pago_stripe.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>EXITO PAGO</h1>
+  
+
+  <script>
+    localStorage.removeItem('carrito');
+  </script>
+  
+{% endblock %}
+

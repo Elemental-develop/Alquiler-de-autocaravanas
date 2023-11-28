@@ -6,8 +6,8 @@
   <p>Fecha de Emisión: {{ factura.fecha_emision }}</p>
   <h2>Productos:</h2>
   <ul>
-    {% for producto in factura.productos.all %}
-      <li>{{ producto.nombre }} - {{ producto.precio }}</li>
+    {% for factura_producto in factura.factura_productos_personalizado_set.all %}
+      <li>{{ factura_producto.producto.nombre }} - {{ factura_producto.producto.precio }} - Cantidad: {{ factura_producto.cantidad }}</li>
     {% endfor %}
   </ul>
   <p>Total: {{ factura.total }}</p>

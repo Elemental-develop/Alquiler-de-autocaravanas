@@ -4,6 +4,7 @@ from cesta.forms import DatosPagoForm, DatosPedidoForm
 from .models import Pedido, Producto, Carrito, ItemCarrito, DatosPedido
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 import json
 
@@ -151,7 +152,9 @@ def procesar_pago(request):
             )
 
             pedido.save()
-            return HttpResponse('PEDIDO CONFIRMADO')  # Reemplaza con la URL adecuada
+
+            factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
+            return redirect(factura_url)
     else:
         form = DatosPagoForm(request.POST)
 

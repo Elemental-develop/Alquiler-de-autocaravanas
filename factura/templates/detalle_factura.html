@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Detalle de Factura</h1>
+  <p>Fecha de Emisión: {{ factura.fecha_emision }}</p>
+  <h2>Productos:</h2>
+  <ul>
+    {% for factura_producto in factura.factura_productos_personalizado_set.all %}
+      <li>{{ factura_producto.producto.nombre }} - {{ factura_producto.producto.precio }} - Cantidad: {{ factura_producto.cantidad }}</li>
+    {% endfor %}
+  </ul>
+  <p>Total: {{ factura.total }}</p>
+  <a href="{% url 'generar_factura_pdf' factura.id %}">Generar PDF</a>
+{% endblock %}

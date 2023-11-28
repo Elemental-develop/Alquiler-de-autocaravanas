@@ -10,6 +10,9 @@ class Carrito(models.Model):
 
     def calcular_total(self):
         return sum(item.calcular_subtotal() for item in self.items.all())
+
+    def limpiar_carrito(self):
+        self.productos.clear()
     
 class ItemCarrito(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)

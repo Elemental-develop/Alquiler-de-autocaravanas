@@ -1,9 +1,13 @@
+from django import forms
 from django.contrib import admin
-from .models import Factura
+from .models import Factura, Factura_productos_personalizado
+from producto.models import Producto
+
+class FacturaProductosPersonalizadoInline(admin.TabularInline):
+    model = Factura_productos_personalizado
+    extra = 1
 
 class FacturaAdmin(admin.ModelAdmin):
-    list_display = ['id', 'cliente', 'fecha_emision', 'total']  # Campos a mostrar en la lista de facturas
-    search_fields = ['cliente']  # Habilita la búsqueda por cliente
-    filter_horizontal = ['productos']  # Agrega una interfaz de selección de productos
+    inlines = [FacturaProductosPersonalizadoInline]
 
 admin.site.register(Factura, FacturaAdmin)

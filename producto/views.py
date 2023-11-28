@@ -54,10 +54,13 @@ def detalles_producto(request, producto_id):
             lista_opiniones.append(nueva_opinion)
     else:
         form = OpinionForm()
-    lista_opiniones.__delitem__(1)
-    lista_opiniones.__delitem__(0)
-    lista_usuarios.__delitem__(1)
-    lista_usuarios.__delitem__(0)
+    
+    if len(lista_opiniones) > 1:
+        lista_opiniones.__delitem__(1)
+        lista_opiniones.__delitem__(0)
+    if len(lista_usuarios) > 1:
+        lista_usuarios.__delitem__(1)
+        lista_usuarios.__delitem__(0)
 
     usuarios_opiniones = list(zip(lista_usuarios, lista_opiniones))
     

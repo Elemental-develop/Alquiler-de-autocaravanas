@@ -58,8 +58,10 @@
                     <p>{{ producto.descripcion }}</p>
                     <p>Precio: ${{ producto.precio }}</p>
                     <a class="btn-link" href="/productos/{{producto.id}}">Más información</a>
-                    <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}">Añadir al carrito</a>
-                    <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1" onchange="updateCartLink({{ producto.id }})">
+                    {% if producto.unidades != 0 %}
+                        <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}">Añadir al carrito</a>
+                        <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1" onchange="updateCartLink({{ producto.id }})">
+                    {% endif %}
                 </td>
             </tr>
         </table>

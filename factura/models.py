@@ -1,14 +1,14 @@
 from django.db import models
-from django.contrib.auth.models import User
+from cesta.models import Pedido
+from producto.models import Producto
 
 class Factura(models.Model):
-    cliente = models.ForeignKey(User, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     fecha_emision = models.DateField(auto_now_add=True)
-    productos = models.ManyToManyField('producto.Producto')
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"Factura {self.id} - {self.cliente.username}"
+        return f"Factura {self.id} - Pedido {self.pedido.id}"
 
 class Factura_productos_personalizado(models.Model):
     factura = models.ForeignKey(Factura, on_delete=models.CASCADE)

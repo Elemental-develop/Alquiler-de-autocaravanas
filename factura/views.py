@@ -1,7 +1,5 @@
 import json
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
 from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -12,18 +10,14 @@ from producto.models import Producto
 from django.conf import settings
 from django.core.mail import EmailMessage
 
-@login_required
-def generar_factura(request):
-    carrito = Pedido.objects.filter(usuario=request.user).last()
+def generar_factura(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
 
-    if carrito is None:
-        messages.error(request, 'No se encontró un carrito para este usuario.')
+    total_factura = pedido.precio
 
-    total_factura = carrito.precio
+    nueva_factura = Factura.objects.create(pedido=pedido, total=total_factura)
 
-    nueva_factura = Factura.objects.create(cliente=request.user, total=total_factura)
-
-    productos = json.loads(carrito.productos)
+    productos = json.loads(pedido.productos)
 
     for producto_info in productos:
         nombre_producto = producto_info['nombre']
@@ -33,16 +27,14 @@ def generar_factura(request):
 
         Factura_productos_personalizado.objects.create(factura=nueva_factura, producto=producto_existente, cantidad=cantidad_pedido)
 
-    enviar_correo_factura(request, nueva_factura, carrito)
+    enviar_correo_factura(request, nueva_factura)
 
     return redirect('detalle_factura', factura_id=nueva_factura.id)
 
-@login_required
 def detalle_factura(request, factura_id):
     factura = get_object_or_404(Factura, id=factura_id)
     return render(request, 'detalle_factura.html', {'factura': factura})
 
-@login_required
 def generar_factura_pdf(request, factura_id):
     factura = get_object_or_404(Factura, id=factura_id)
 
@@ -55,7 +47,7 @@ def generar_factura_pdf(request, factura_id):
     p.drawString(100, 750, "FACTURA")
 
     p.setFont("Helvetica", 12)
-    p.drawString(100, 730, f"Cliente: {factura.cliente.username}")
+    p.drawString(100, 730, f"Pedido: {factura.pedido.id}")
     p.drawString(100, 715, f"Fecha de Emisión: {factura.fecha_emision}")
 
     productos = Factura_productos_personalizado.objects.filter(factura=factura)
@@ -93,12 +85,12 @@ def generar_factura_pdf(request, factura_id):
     p.save()
     return response
 
-def enviar_correo_factura(request, factura, carrito):
+def enviar_correo_factura(request, factura):
     pdf_response = generar_factura_pdf(request, factura.id)
 
     mensaje = "Adjunto encontrarás la factura correspondiente a tu pedido."
 
-    pedido = carrito
+    pedido = factura.pedido
 
     email = EmailMessage(
         'Factura de tu pedido',

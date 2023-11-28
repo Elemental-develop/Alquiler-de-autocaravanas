@@ -9,6 +9,8 @@ from reportlab.lib import colors
 from .models import Factura, Factura_productos_personalizado
 from cesta.models import Pedido
 from producto.models import Producto
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 @login_required
 def generar_factura(request):
@@ -16,7 +18,6 @@ def generar_factura(request):
 
     if carrito is None:
         messages.error(request, 'No se encontró un carrito para este usuario.')
-        return redirect('some_redirect_url')
 
     total_factura = carrito.precio
 
@@ -31,6 +32,8 @@ def generar_factura(request):
         producto_existente = Producto.objects.get(nombre=nombre_producto)
 
         Factura_productos_personalizado.objects.create(factura=nueva_factura, producto=producto_existente, cantidad=cantidad_pedido)
+
+    enviar_correo_factura(request, nueva_factura, carrito)
 
     return redirect('detalle_factura', factura_id=nueva_factura.id)
 
@@ -89,3 +92,20 @@ def generar_factura_pdf(request, factura_id):
     p.showPage()
     p.save()
     return response
+
+def enviar_correo_factura(request, factura, carrito):
+    pdf_response = generar_factura_pdf(request, factura.id)
+
+    mensaje = "Adjunto encontrarás la factura correspondiente a tu pedido."
+
+    pedido = carrito
+
+    email = EmailMessage(
+        'Factura de tu pedido',
+        mensaje,
+        settings.DEFAULT_FROM_EMAIL,
+        [pedido.email],
+    )
+    
+    email.attach(f'factura_{factura.id}.pdf', pdf_response.content, 'application/pdf')
+    email.send(fail_silently=False)

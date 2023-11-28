@@ -151,7 +151,7 @@ def procesar_pago(request):
             )
 
             pedido.save()
-            return HttpResponse('PEDIDO CONFIRMADO')  # Reemplaza con la URL adecuada
+            return redirect('/factura/generar_factura/')
     else:
         form = DatosPagoForm(request.POST)
 

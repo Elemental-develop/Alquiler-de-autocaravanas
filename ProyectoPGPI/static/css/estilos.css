@@ -354,3 +354,13 @@ h5 a.btn-link {
     margin-top: -15px;
     color: green
 }
+
+.logo-pie-pagina {
+    height: 200px;
+    margin-top: -25px;
+    margin-bottom: -25px;
+}
+
+.logo-pago {
+    height: 150px;
+}

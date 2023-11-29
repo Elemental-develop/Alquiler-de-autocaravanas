@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+
+<body>
+    {% block content %}
+
+
+    <form method="post" action="{% url 'procesar_pedido' %}">
+        {% csrf_token %}
+        <!-- Sección 1: Información del Usuario -->
+        <h1 class="h1">Información del Usuario</h1>
+
+        <div class="pagina-centrada-cuenta">
+
+            <label for="{{ form.email.id_for_label }}">Email*:</label>
+            <input required type="email" name="{{ form.email.name }}" value="{{ form.email.initial|default:'' }}"
+                id="{{ form.email.id_for_label }}">
+
+            <label for="{{ form.first_name.id_for_label }}">Nombre*:</label>
+            <input required type="first_name" name="{{ form.first_name.name }}"
+                value="{{ form.first_name.initial|default:'' }}" id="{{ form.first_name.id_for_label }}">
+
+            <label for="{{ form.last_name.id_for_label }}">Apellidos*:</label>
+            <input required type="last_name" name="{{ form.last_name.name }}"
+                value="{{ form.last_name.initial|default:'' }}" id="{{ form.last_name.id_for_label }}">
+            <label for="{{ form.telefono.id_for_label }}">Teléfono*:</label>
+            {{ form.telefono }}
+        </div>
+
+        <!-- Sección 2: Información del Pedido -->
+        <h1 class="h1">Información del Pedido</h1>
+
+        <div class="pagina-centrada-cuenta">
+            <label for="{{ form.direccion_envio.id_for_label }}">Dirección de Envío*:</label>
+            {{ form.direccion_envio }}
+            <label for="{{ form.direccion_facturacion.id_for_label }}">Dirección de Facturación*:</label>
+            {{ form.direccion_facturacion }}
+            <label for="{{ form.instrucciones_entrega.id_for_label }}">Instrucciones de Entrega:</label>
+            {{ form.instrucciones_entrega }}
+            <label for="{{ form.forma_entrega.id_for_label }}">Forma de Entrega*:</label>
+            <select name="{{ form.forma_entrega.name }}" id="{{ form.forma_entrega.id_for_label }}"
+                class="form-control">
+                {% for value, label in form.forma_entrega.field.choices %}
+                <option value="{{ value }}" {% if form.forma_entrega.value == value %}selected{% endif %}>{{ label }}
+                </option>
+                {% endfor %}
+
+            </select>
+            <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
+            <button type="submit" class="icono-cuenta">Confirmar datos</button>
+        </div>
+
+    </form>
+
+
+    <h1 class="h1">Resumen del pedido</h1>
+    <div class="sugerencias">
+        {% for item in items %}
+        <div class="product">
+          <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}">
+          <h3>{{ item.producto.nombre }}</h3>
+          <h4>Cantidad: {{ item.cantidad }} días</h4>
+          <h4 class="message">Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
+          <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
+        </div>
+        {% endfor %}
+      </div>
+
+    {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito</title>
+</head>
+
+<body>
+  {% block content %}
+  <h1 class="h1">Carrito de Compra</h1>
+
+  <form method="post" action="{% url 'realizar_pedido' %}">
+    {% csrf_token %}
+
+    <div class="sugerencias">
+      {% for item in items %}
+      <div class="product">
+        <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}">
+        <h3>{{ item.producto.nombre }}</h3>
+        <h4>Cantidad (días): <input style="width: 70px" type="number" name="cantidad_{{ item.id }}"
+            value="{{ item.cantidad }}" min="0"></h4>
+        <h4 class="message">Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
+        <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="pagina-centrada-cuenta">
+      <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
+      <button type="submit" class="icono-cuenta">Realizar pedido</button>
+
+    </div>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const cantidadInputs = document.querySelectorAll('input[name^="cantidad_"]');
+      cantidadInputs.forEach(input => {
+        input.addEventListener('change', function () {
+          const itemId = this.name.replace("cantidad_", "");
+          const productoId = document.querySelector(`input[name="producto_id_${itemId}"]`).value;
+          const nuevaCantidad = this.value;
+          const subtotalElement = document.querySelector(`#subtotal-${itemId}`);
+
+          obtenerPrecioProducto(productoId, function (precioProducto) {
+            const nuevoSubtotal = precioProducto * nuevaCantidad;
+
+            subtotalElement.textContent = nuevoSubtotal.toFixed(2);
+            actualizarTotal();
+            guardarCarritoEnLocalStorage();
+          });
+        });
+      });
+
+      function obtenerPrecioProducto(productoId, callback) {
+        fetch(`/obtener_producto/${productoId}/`)
+          .then(response => response.json())
+          .then(producto => {
+            const precioProducto = producto ? producto.precio : 0.0;
+            callback(precioProducto);
+          })
+          .catch(error => {
+            console.error('Error al obtener información del producto:', error);
+            callback(0.0);
+          });
+      }
+
+      function actualizarTotal() {
+        let total = 0;
+        const subtotales = document.querySelectorAll('.subtotal');
+        subtotales.forEach(subtotal => {
+          total += parseFloat(subtotal.textContent);
+        });
+        document.querySelector('#total').textContent = total.toFixed(2);
+      }
+
+      function guardarCarritoEnLocalStorage() {
+        const carrito = [];
+        const items = document.querySelectorAll('input[name^="cantidad_"]');
+        items.forEach(item => {
+          const itemId = item.name.replace("cantidad_", "");
+          const cantidad = item.value;
+          const productoId = document.querySelector(`input[name="producto_id_${itemId}"]`).value;
+          const subtotal = document.querySelector(`#subtotal-${itemId}`).textContent;
+
+          carrito.push({
+            itemId,
+            cantidad,
+            productoId,
+            subtotal,
+          });
+        });
+
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+      }
+
+      // Cargar el carrito desde localStorage al cargar la página
+      const storedCarrito = localStorage.getItem('carrito');
+      if (storedCarrito) {
+        const carritoData = JSON.parse(storedCarrito);
+        carritoData.forEach(item => {
+          const input = document.querySelector(`input[name="cantidad_${item.itemId}"]`);
+          if (input) {
+            input.value = item.cantidad;
+            document.querySelector(`#subtotal-${item.itemId}`).textContent = item.subtotal;
+          }
+        });
+        actualizarTotal();
+      }
+    });
+  </script>
+  {% endblock %}
+</body>
+
+</html>

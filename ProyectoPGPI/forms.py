@@ -4,6 +4,8 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
+from claim.models import Claim
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -34,3 +36,7 @@ class UserProfileForm(forms.ModelForm):
         model = User
         fields = ['email', 'first_name', 'last_name']
 
+class ClaimForm(forms.ModelForm):
+    class Meta:
+        model = Claim
+        fields = ['titulo', 'descripcion']

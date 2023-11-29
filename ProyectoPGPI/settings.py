@@ -51,6 +51,7 @@ MODULES = [
     'factura',
     'oferta',
     'datos_entrega',
+    'claim',
 
 ]
 

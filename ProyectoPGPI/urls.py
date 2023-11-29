@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf import settings
 from producto.views import lista_productos, detalles_producto
-from .views import home, obtener_producto, registro, cuenta, logout_cuenta, editar_perfil
+from .views import home, obtener_producto, registro, cuenta, logout_cuenta, editar_perfil, reclamaciones
 
 
 urlpatterns = [
@@ -33,6 +33,8 @@ urlpatterns = [
     path('logout/', logout_cuenta, name='logout'),
     path('obtener_producto/<int:producto_id>/', obtener_producto),
     path('autocaravana/<int:producto_id>/', detalles_producto, name='detalles_producto'),
+    path('reclamaciones/', reclamaciones, name='reclamaciones'),
+
 ]
 
 for module in settings.MODULES:

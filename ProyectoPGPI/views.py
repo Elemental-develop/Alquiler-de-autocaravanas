@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from producto.models import Producto
 from datos_entrega.models import DatosEntrega
 from django.db.models import Q
-from ProyectoPGPI.forms import CustomUserCreationForm, UserProfileForm
+from ProyectoPGPI.forms import ClaimForm, CustomUserCreationForm, UserProfileForm
 from datos_entrega.forms import DatosEntregaForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -107,3 +107,10 @@ def editar_perfil(request):
         datos_entrega_form = DatosEntregaForm(instance=datos_entrega)
 
     return render(request, 'editar_perfil.html', {'user_form': user_form, 'datos_entrega_form': datos_entrega_form})
+
+def reclamaciones(request):
+    if request.method == 'POST':
+        claim_creation_form = ClaimForm(data=request.POST)
+        claim_creation_form.save()
+        return redirect('home')
+    return render(request, 'reclamacion.html', {'form': ClaimForm()})

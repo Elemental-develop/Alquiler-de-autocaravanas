@@ -12,9 +12,15 @@ from .models import Estado, FormaPago, Pedido, Producto, Carrito, ItemCarrito, D
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 
 import json
+
+def delete_temporal_user(request):
+    if request.user.username.startswith('fake'):
+        user = User.objects.get(username=request.user.username)
+        logout(request)
+        user.delete()
 
 def generar_usuario_temporal(request):
     username = f'fake-{uuid.uuid4()}'
@@ -154,6 +160,7 @@ def procesar_pago(request):
                 create_pedido(request, datos_pedido, productos, estado=Estado.CONFIRMADO)
                 
                 carrito.limpiar_carrito()
+                delete_temporal_user(request)
                 
                 return render(request, 'exito_pago.html')
 
@@ -212,6 +219,7 @@ def exito_pago_stripe(request):
 
                 carrito = Carrito.objects.get(usuario=request.user)
                 carrito.limpiar_carrito()
+                delete_temporal_user(request)
                             
             else:
                 return render(request, 'cancelar_pago.html')

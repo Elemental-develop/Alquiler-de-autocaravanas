@@ -69,7 +69,7 @@ class Estado(models.TextChoices):
     PENDIENTE = 'PENDIENTE', 'Pendiente'
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     telefono = models.CharField(max_length=12)
     direccion_envio = models.CharField(max_length=150)

@@ -49,6 +49,16 @@ def agregar_al_carrito(request, producto_id):
 
     return redirect('ver_carrito')
 
+@login_required
+def eliminar_del_carrito(request, producto_id):
+    carrito = get_object_or_404(Carrito, usuario=request.user)
+
+    item_carrito = get_object_or_404(ItemCarrito, carrito=carrito, producto__id=producto_id)
+
+    item_carrito.delete()
+    return redirect('ver_carrito')
+
+
 def ver_carrito(request):
     
     user = None

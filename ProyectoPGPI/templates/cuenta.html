@@ -1,13 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio</title>
+</head>
+
 <body>
     {% block content %}
 
-    <h1>Detalles del Usuario</h1>
+        <h1 class="h1">Detalles del Usuario</h1>
 
-    <p>Nombre de usuario: {{ user.username }}</p>
-    <p>Correo electrónico: {{ user.email }}</p>
-    <p>Fecha de registro: {{ user.date_joined }}</p>
-    <a href="/logout/">Logout</a>      
+        <div class="pagina-centrada-cuenta">
+            <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
+            <p><strong>Nombre:</strong> {{ user.first_name }}</p>
+            <p><strong>Apellido:</strong> {{ user.last_name }}</p>
+            <p><strong>Fecha de registro:</strong> {{ user.date_joined }}</p>
+    
+        </div>
+    
+        <h1 class="h1">Datos de Entrega</h1>
 
+        <div class="pagina-centrada-cuenta">
+            <p><strong>Dirección de entrega:</strong> {{ datos_entrega.direccion_entrega|default:"" }}</p>
+            <p><strong>Ciudad:</strong> {{ datos_entrega.ciudad|default:"" }}</p>
+            <p><strong>Código Postal:</strong> {{ datos_entrega.codigo_postal|default:"" }}</p>
+    
+        </div>
+    
+        <h1 class="h1">Datos de Pago</h1>
+
+        <div class="pagina-centrada-cuenta">
+    
+            <p><strong>Método de Pago:</strong> {{ datos_entrega.metodo_pago|default:"No especificado" }}</p>
+    
+        </div>
+    
+        <div class="pagina-centrada-productos">
+            <a href="{% url 'editar_perfil' %}" class="icono-cuenta">Editar Perfil</a>
+            <a href="/logout/" class="icono-cuenta"> Cerrar sesión</a>
+        </div>
+
+    
     {% endblock %}
 </body>
+</html>

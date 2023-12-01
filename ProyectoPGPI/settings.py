@@ -47,7 +47,11 @@ MODULES = [
    
     'buscador',
     'producto',
-    'cesta'
+    'cesta',
+    'factura',
+    'oferta',
+    'datos_entrega',
+    'claim',
 
 ]
 
@@ -140,6 +144,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'ProyectoPGPI/static')]
 
 STRIPE_PUBLIC_KEY = 'pk_test_51OH5liE1VZogj5Oj0dHBqa4m8iUUnJjHs0LghaN5wIcPLFKBPCUckQhWNOKJdI3uBX1jL1jIrlFOwYhiUcIbVDv300Veb3Ep6W'
 STRIPE_SECRET_KEY = 'sk_test_51OH5liE1VZogj5OjKwwCo8ZJMfiC3JFxOdgUGlPT5u2N4o9h9kOExlDoUGkerZugsu6rdS36Zmdt2l1e54QprGme00e08qLRsQ'
@@ -148,5 +153,14 @@ STRIPE_SECRET_KEY = 'sk_test_51OH5liE1VZogj5OjKwwCo8ZJMfiC3JFxOdgUGlPT5u2N4o9h9k
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'decidevelazquez@gmail.com'
+EMAIL_HOST_PASSWORD = 'ibab blmy ccow hltx'
+DEFAULT_FROM_EMAIL = 'decidevelazquez@gmail.com'
+SERVER_EMAIL = 'decidevelazquez@gmail.com'
 
 INSTALLED_APPS = INSTALLED_APPS + MODULES

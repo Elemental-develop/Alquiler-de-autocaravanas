@@ -13,6 +13,7 @@ from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login,logout
+from django.urls import reverse
 
 import json
 
@@ -136,7 +137,7 @@ def procesar_pedido(request):
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()
     
-    return render(request, 'procesar_pedido.html', {'form': form, 'items': items})
+    return render(request, 'procesar_pedido.html', {'form': form, 'items': items, 'carrito': carrito})
 
     def get_form_kwargs(self):
             kwargs = super().get_form_kwargs()
@@ -193,6 +194,8 @@ def procesar_pago(request):
 
                 return render(request, 'procesar_pago_stripe.html', {'session_id': session.id})
 
+            factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
+            return redirect(factura_url)
     else:
         form = DatosPagoForm()
 

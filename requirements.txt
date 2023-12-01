@@ -3,3 +3,4 @@ psycopg2
 crispy-bootstrap5
 django-crispy-forms
 stripe
+reportlab

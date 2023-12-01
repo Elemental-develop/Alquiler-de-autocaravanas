@@ -1,4 +1,6 @@
+from itertools import product
 from pyexpat.errors import messages
+import uuid
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
@@ -9,13 +11,27 @@ from cesta.utils import create_pedido, get_productos_from_carrito
 from .models import Estado, FormaPago, Pedido, Producto, Carrito, ItemCarrito, DatosPedido
 from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 import json
 
-@login_required
+def generar_usuario_temporal(request):
+    username = f'fake-{uuid.uuid4()}'
+    user = User.objects.create_user(username=username)
+    login(request, user)
+    return user
+
 def agregar_al_carrito(request, producto_id):
+    
+    user = None
+    if not request.user.is_authenticated:
+        user = generar_usuario_temporal(request)
+    
+    user = user if user else request.user
+    
     producto = get_object_or_404(Producto, pk=producto_id)
-    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    carrito, created = Carrito.objects.get_or_create(usuario=user)
     item, item_created = ItemCarrito.objects.get_or_create(producto=producto, carrito=carrito)
     
     cantidad_param = request.GET.get('cantidad')
@@ -26,9 +42,15 @@ def agregar_al_carrito(request, producto_id):
 
     return redirect('ver_carrito')
 
-@login_required
 def ver_carrito(request):
-    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    
+    user = None
+    if not request.user.is_authenticated:
+        user = generar_usuario_temporal(request)
+    
+    user = user if user else request.user
+    
+    carrito, created = Carrito.objects.get_or_create(usuario=user)
     items = carrito.items.all()
 
     return render(request, 'carrito.html', {'carrito': carrito, 'items': items})

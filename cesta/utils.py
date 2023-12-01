@@ -22,6 +22,8 @@ def create_pedido(request, datos_pedido, productos, estado=Estado.PENDIENTE):
                 )
 
     pedido.save()
+    
+    return pedido
 
 
 def get_productos_from_carrito(carrito):

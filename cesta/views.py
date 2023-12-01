@@ -158,10 +158,13 @@ def procesar_pago(request):
 
             if form.cleaned_data['forma_pago'] == FormaPago.CONTRARREEMBOLSO:
                 
-                create_pedido(request, datos_pedido, productos, estado=Estado.CONFIRMADO)
+                pedido = create_pedido(request, datos_pedido, productos, estado=Estado.CONFIRMADO)
                 
                 carrito.limpiar_carrito()
                 delete_temporal_user(request)
+                
+                factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
+                return redirect(factura_url)
                 
                 return render(request, 'exito_pago.html')
 
@@ -182,7 +185,7 @@ def procesar_pago(request):
                     }
                     productos_stripe.append(producto_info)
                 
-                create_pedido(request, datos_pedido, productos)
+                pedido = create_pedido(request, datos_pedido, productos)
 
                 session = stripe.checkout.Session.create(
                     payment_method_types=['card'],
@@ -193,9 +196,6 @@ def procesar_pago(request):
                 )
 
                 return render(request, 'procesar_pago_stripe.html', {'session_id': session.id})
-
-            factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
-            return redirect(factura_url)
     else:
         form = DatosPagoForm()
 
@@ -226,6 +226,9 @@ def exito_pago_stripe(request):
                             
             else:
                 return render(request, 'cancelar_pago.html')
+            
+            factura_url = reverse('generar_factura', kwargs={'pedido_id': ultimo_pedido.id})
+            return redirect(factura_url)
 
             return render(request, 'exito_pago.html')
 

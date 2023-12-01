@@ -57,7 +57,7 @@
                         <div>
                             {% if producto.unidades != 0 %}
                             <p class="icono" style="display: inline; margin-left: 10px;">
-                                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}>
+                                <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}">
                                     <i class="fas fa-cart-plus icono"></i>
                                 </a>
                                 <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1" onchange="updateCartLink({{ producto.id }})">

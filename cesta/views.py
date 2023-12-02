@@ -191,7 +191,6 @@ def procesar_pago(request):
                     item.save()
                 return redirect(factura_url)
                 
-                return render(request, 'exito_pago.html')
 
             elif form.cleaned_data['forma_pago'] == FormaPago.STRIPE:
 
@@ -265,7 +264,6 @@ def exito_pago_stripe(request):
             
             return redirect(factura_url)
 
-            return render(request, 'exito_pago.html')
 
 
     return HttpResponse("PAGO NO EXITOSO")

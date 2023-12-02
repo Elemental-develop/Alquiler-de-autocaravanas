@@ -43,11 +43,22 @@ class DatosPedidoForm(forms.ModelForm):
 
 
 class DatosPagoForm(forms.ModelForm):
-    
-    FORMAS_PAGO = [
-        (FormaPago.CONTRARREEMBOLSO, 'Contrareembolso')
-    ]
-    
     class Meta:
         model = DatosPedido
         fields = ['forma_pago']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Agrega las opciones de forma de pago dinámicamente
+        self.fields['forma_pago'].widget = forms.RadioSelect(
+            choices=self.get_formas_pago_choices(),
+            attrs={'class': 'form-check-input'}
+        )
+
+    def get_formas_pago_choices(self):
+        # Agrega aquí cualquier lógica adicional para obtener opciones de forma de pago
+        formas_pago = [
+            (FormaPago.CONTRARREEMBOLSO, 'Contrareembolso'),
+            (FormaPago.STRIPE, 'Pago con Stripe'),
+        ]
+        return formas_pago

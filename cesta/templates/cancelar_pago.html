@@ -1,0 +1,11 @@
+<!-- templates/cesta/procesar_pago_stripe.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>PAGO CANCELADO</h1>
+  
+  <script>
+      localStorage.removeItem('carrito');
+  </script>
+  
+{% endblock %}

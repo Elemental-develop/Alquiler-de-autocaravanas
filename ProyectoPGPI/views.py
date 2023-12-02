@@ -10,6 +10,7 @@ from ProyectoPGPI.forms import ClaimForm, CustomUserCreationForm, UserProfileFor
 from datos_entrega.forms import DatosEntregaForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 
 
 def home(request):
@@ -128,6 +129,7 @@ def editar_perfil(request):
 
     return render(request, 'editar_perfil.html', {'user_form': user_form, 'datos_entrega_form': datos_entrega_form})
 
+@require_http_methods(["GET", "POST"]) 
 def reclamaciones(request):
     if request.method == 'POST':
         claim_creation_form = ClaimForm(data=request.POST)
@@ -135,6 +137,7 @@ def reclamaciones(request):
         return redirect('home')
     return render(request, 'reclamacion.html', {'form': ClaimForm()})
 
+@require_http_methods(["GET", "POST"]) 
 def seguimiento(request):
     pedido = None
     print(request.method == 'POST')

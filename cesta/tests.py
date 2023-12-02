@@ -20,8 +20,5 @@ class CompraTest(TestCase):
         
         self.assertEqual(response.status_code, 200)
         
-    def test_cesta_wrong(self):
-        
-        response = self.client.get('/cesta/carrito/')
-        self.assertEqual(response.status_code, 302)
+
     

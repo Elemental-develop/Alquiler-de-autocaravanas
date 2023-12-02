@@ -9,6 +9,7 @@
       <li>{{ factura_producto.producto.nombre }} - {{ factura_producto.producto.precio_rebajado }} - Cantidad: {{ factura_producto.cantidad }}</li>
     {% endfor %}
   </ul>
+  <p>Seguimienton de su pedido: {{ factura.pedido.secreto }}</p>
   <p>Total: {{ factura.total }}</p>
   <a href="{% url 'generar_factura_pdf' factura.id %}">Generar PDF</a>
 {% endblock %}

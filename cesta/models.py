@@ -1,4 +1,5 @@
 from enum import Enum, auto
+import uuid
 from django.db import models
 from producto.models import Producto
 from django.contrib.auth.models import User
@@ -82,6 +83,8 @@ class Pedido(models.Model):
     email = models.EmailField(default="")
     first_name = models.CharField(max_length=30, default="")
     last_name = models.CharField(max_length=30, default="")
+
+    secreto = models.CharField(max_length=255, default=uuid.uuid4())
     
     forma_entrega = models.CharField(
         max_length=5,

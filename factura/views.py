@@ -80,6 +80,8 @@ def generar_factura_pdf(request, factura_id):
     p.line(table_x, table_y - (len(productos) + 1) * row_height, table_x + sum(col_widths), table_y - (len(productos) + 1) * row_height)
 
     p.drawString(table_x + col_widths[0] + col_widths[1] + col_widths[2], table_y - (len(productos) + 2) * row_height, f"Total: ${total:.2f}")
+    
+    p.drawString(table_x, table_y - (len(productos) + 3) * row_height, f"Seguimiento del pedido: {factura.pedido.secreto}")
 
     p.showPage()
     p.save()

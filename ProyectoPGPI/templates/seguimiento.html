@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+</head>
+
+<body>
+    {% block content %}
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="codigo">Código de seguimiento del pedido:</label>
+        <input type="text" id="codigo" name="codigo">
+        <button type="submit">Enviar</button>
+    </form>
+    <p>Código de seguimiento: {{ pedido.secreto }}</p>
+    <p>Nombre: {{ pedido.first_name }}</p>
+    <p>Apellidos: {{ pedido.last_name }}</p>
+    <p>Estado del pedido: {{ pedido.estado }}</p>
+
+    
+    {{ pedido.productos }}
+
+    {% endblock content %}
+</body>
+
+</html>

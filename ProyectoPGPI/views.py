@@ -1,6 +1,7 @@
 from math import prod
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from cesta.models import Pedido
 from producto.models import Producto
 from datos_entrega.models import DatosEntrega
 from django.db.models import Q, F, FloatField
@@ -133,3 +134,13 @@ def reclamaciones(request):
         claim_creation_form.save()
         return redirect('home')
     return render(request, 'reclamacion.html', {'form': ClaimForm()})
+
+def seguimiento(request):
+    pedido = None
+    print(request.method == 'POST')
+    if request.method == 'POST':
+        codigo = request.POST.get("codigo")
+        pedido = Pedido.objects.get(secreto=codigo)
+        print(pedido)
+
+    return render(request, 'seguimiento.html', {'pedido':pedido})

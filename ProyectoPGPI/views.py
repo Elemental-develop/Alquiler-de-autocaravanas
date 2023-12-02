@@ -30,9 +30,11 @@ def home(request):
     query_oferta = Q()
     if busqueda_q:
         query &= Q(nombre__icontains = busqueda_q) | Q(descripcion__icontains = busqueda_q)
+        query_oferta &= Q(producto__nombre__icontains = busqueda_q) | Q(producto__descripcion__icontains = busqueda_q)
     
     if busqueda_marca:
         query &= Q(marca__icontains=busqueda_marca)
+        query_oferta &= Q(producto__marca__icontains=busqueda_marca)
     
     if busqueda_precio_min:
         query &= Q(precio__gte=float(busqueda_precio_min))
@@ -41,6 +43,7 @@ def home(request):
     if busqueda_precio_max:
         query &= Q(precio__lte=float(busqueda_precio_max))
         query_oferta = Q(precio_rebajado__lte=float(busqueda_precio_max))
+
 
     productos_rebajados = Producto.objects.annotate(
         precio_rebajado=Cast(F('precio') - (F('precio') * F('oferta__porcentaje') / 100), output_field=FloatField())

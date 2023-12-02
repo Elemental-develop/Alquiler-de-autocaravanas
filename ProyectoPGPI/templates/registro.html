@@ -1,22 +1,41 @@
-<title>{% block title %}Registro{% endblock %}</title>
+{% extends 'base.html' %}
+{% load static %}
 
-{% load crispy_forms_tags %}
-{% block content %}
+<!DOCTYPE html>
+<html lang="es">
 
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Crear cuenta</legend>
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+</head>
+
+<body>
+    {% block content %}
+    {% load crispy_forms_tags %}
+
+    <h1 class="h1">Crear cuenta</h1>
+
+    <div class="pagina-centrada-productos">
+        <div>
+            <img src="{% static 'images/logoAutovan.jpeg' %}" alt="Logo de la empresa" style="width: 300px;">
+        </div>
+        <div class="pagina-centrada-cuenta">
+
+            <form method="POST">
+                {% csrf_token %}
                 {{ form | crispy }}
-            </fieldset>
-            <div>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Registrarse</button>
-            </div>
-        </form>
-         {{mensaje}}
-         {{datos}}
-    </div>             
+                <div class="form-group">
+                    <button class="btn btn-outline-info icono-cuenta" type="submit">Registrarse</button>
+                </div>
+            </form>
+            {{mensaje}}
+            {{datos}}
+        </div>
+    </div>
+    {% endblock content %}
+</body>
 
-{% endblock content %}
+</html>

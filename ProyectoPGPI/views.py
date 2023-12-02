@@ -30,11 +30,11 @@ def home(request):
     query_oferta = Q()
     if busqueda_q:
         query &= Q(nombre__icontains = busqueda_q) | Q(descripcion__icontains = busqueda_q)
-        query_oferta &= Q(producto__nombre__icontains = busqueda_q) | Q(producto__descripcion__icontains = busqueda_q)
+        query_oferta &= Q(nombre__icontains = busqueda_q) | Q(descripcion__icontains = busqueda_q)
     
     if busqueda_marca:
         query &= Q(marca__icontains=busqueda_marca)
-        query_oferta &= Q(producto__marca__icontains=busqueda_marca)
+        query_oferta &= Q(marca__icontains=busqueda_marca)
     
     if busqueda_precio_min:
         query &= Q(precio__gte=float(busqueda_precio_min))
@@ -52,6 +52,9 @@ def home(request):
     
     productos = productos_rebajados | productos_originales
 
+    for producto in productos:
+        if producto.nombre == 'Gastos de envío':
+            productos = productos.exclude(nombre='Gastos de envío')
     if request.GET.get('q') != None or request.GET.get('q') or request.GET.get('marca') or request.GET.get('precio_min') or request.GET.get('precio_max'):
         return render(request, "lista_productos.html", {'productos': productos, 'marcas': marcas,'busqueda_q': busqueda_q, 'busqueda_marca': busqueda_marca, 'busqueda_precio_min': busqueda_precio_min, 'busqueda_precio_max': busqueda_precio_max})
     return render(request, 'home.html', {'productos': productos, 'marcas': marcas,'busqueda_q': busqueda_q, 'busqueda_marca': busqueda_marca, 'busqueda_precio_min': busqueda_precio_min, 'busqueda_precio_max': busqueda_precio_max})

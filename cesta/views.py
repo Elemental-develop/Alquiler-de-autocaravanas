@@ -5,7 +5,7 @@ from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 import stripe
-
+from django.views.decorators.http import require_http_methods
 from cesta.forms import DatosPagoForm, DatosPedidoForm
 from cesta.utils import create_pedido, get_productos_from_carrito
 from .models import Estado, FormaPago, Pedido, Producto, Carrito, ItemCarrito, DatosPedido
@@ -50,6 +50,7 @@ def agregar_al_carrito(request, producto_id):
     return redirect('ver_carrito')
 
 @login_required
+@require_http_methods(["GET", "POST"])  
 def eliminar_del_carrito(request, producto_id):
     carrito = get_object_or_404(Carrito, usuario=request.user)
 

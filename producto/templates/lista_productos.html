@@ -56,15 +56,16 @@
                         <p class="icono"><i class="fas fa-bed"></i> {{ producto.capacidad_dormir }} dormir</p>
                         <div>
                             {% if producto.unidades != 0 %}
+                            <input class="icono" type="number" id="cantidad-{{ producto.id }}" name="cantidad" style="width: 50px;" min="1" value="1" onchange="updateCartLink({{ producto.id }})">
+
                             <p class="icono" style="display: inline; margin-left: 10px;">
                                 <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}">
                                     <i class="fas fa-cart-plus icono"></i>
                                 </a>
-                                <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" min="1" value="1" onchange="updateCartLink({{ producto.id }})">
                             </p>
-           
                             {% endif %}
                         </div>
+                        
                         <h5><a class="btn-link" href="/productos/{{producto.id}}">Más información</a></h5>
             </div>
         </div>

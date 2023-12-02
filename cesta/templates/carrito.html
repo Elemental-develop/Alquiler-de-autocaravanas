@@ -36,7 +36,8 @@
     </div>
 
     <div class="pagina-centrada-cuenta">
-      <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
+        <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
+        <h4>Gastos de envío de 70€ en pedidos menores a 300€</h4>
       <button type="submit" class="icono-cuenta">Realizar pedido</button>
 
     </div>
@@ -80,6 +81,8 @@
         const subtotales = document.querySelectorAll('.subtotal');
         subtotales.forEach(subtotal => {
           total += parseFloat(subtotal.textContent);
+          if (total < 300) {
+            total += 70;}
         });
         document.querySelector('#total').textContent = total.toFixed(2);
       }
@@ -118,7 +121,9 @@
         actualizarTotal();
       }
     });
-  </script>
+
+</script>
+
   {% endblock %}
 </body>
 

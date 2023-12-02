@@ -78,6 +78,9 @@ def realizar_pedido(request):
     if request.method == "POST":
         user = request.user
         carrito, created = Carrito.objects.get_or_create(usuario=user)
+    
+
+
 
         # Almacenamos en diccionario datos del formulario para
         # manejarlos de manera comoda
@@ -99,6 +102,14 @@ def realizar_pedido(request):
             item, created = ItemCarrito.objects.get_or_create(carrito=carrito, producto=producto)
             item.cantidad = cantidad
             item.save()
+
+        if(carrito.calcular_total() < 300):
+            envio = Producto.objects.create(nombre="Gastos de envío", precio=70, unidades=1)
+            envio.save()
+            item, item_created = ItemCarrito.objects.get_or_create(producto=envio, carrito=carrito)
+            if item_created:
+                item.cantidad = 1
+                item.save()
         
         # Cambiar a una template de la siguiente fase
         # de la compra
@@ -174,6 +185,10 @@ def procesar_pago(request):
                 delete_temporal_user(request)
                 
                 factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
+                for producto in productos:                    
+                    item = Producto.objects.get(pk=producto.get("id"))
+                    item.unidades -= 1
+                    item.save()
                 return redirect(factura_url)
                 
                 return render(request, 'exito_pago.html')
@@ -231,13 +246,23 @@ def exito_pago_stripe(request):
                 ultimo_pedido.save()
 
                 carrito = Carrito.objects.get(usuario=request.user)
+                for producto in get_productos_from_carrito(carrito):                 
+                    item = Producto.objects.get(pk=producto.get("id"))
+                    item.unidades -= 1
+                    item.save()
+
                 carrito.limpiar_carrito()
+
                 delete_temporal_user(request)
+
+                
                             
             else:
                 return render(request, 'cancelar_pago.html')
             
             factura_url = reverse('generar_factura', kwargs={'pedido_id': ultimo_pedido.id})
+
+            
             return redirect(factura_url)
 
             return render(request, 'exito_pago.html')

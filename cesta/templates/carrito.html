@@ -67,7 +67,7 @@
         fetch(`/obtener_producto/${productoId}/`)
           .then(response => response.json())
           .then(producto => {
-            const precioProducto = producto ? producto.precio : 0.0;
+            const precioProducto = producto ? producto.precio_rebajado : 0.0;
             callback(precioProducto);
           })
           .catch(error => {

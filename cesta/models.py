@@ -23,7 +23,7 @@ class ItemCarrito(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
 
     def calcular_subtotal(self):
-        return self.producto.precio * self.cantidad
+        return self.producto.precio_rebajado() * self.cantidad
 
 
 class FormaEntrega(models.TextChoices):

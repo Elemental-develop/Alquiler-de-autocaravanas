@@ -16,7 +16,9 @@
   {% block content %}
 
   <h1 class="h1">Iniciar Sesión </h1>
-
+  {% if "fake-" in request.user.username %}
+  <p class="subtitulo-centrado">Necesitas crear una cuenta para acceder a tu perfil</p>
+  {% endif %}
   <div class="pagina-centrada-productos">
     <div>
       <img src="{% static 'images/logoAutovan.jpeg' %}" alt="Logo de la empresa" class="logo-empresa">

@@ -6,7 +6,7 @@
   <h2>Productos:</h2>
   <ul>
     {% for factura_producto in factura.factura_productos_personalizado_set.all %}
-      <li>{{ factura_producto.producto.nombre }} - {{ factura_producto.producto.precio }} - Cantidad: {{ factura_producto.cantidad }}</li>
+      <li>{{ factura_producto.producto.nombre }} - {{ factura_producto.producto.precio_rebajado }} - Cantidad: {{ factura_producto.cantidad }}</li>
     {% endfor %}
   </ul>
   <p>Total: {{ factura.total }}</p>

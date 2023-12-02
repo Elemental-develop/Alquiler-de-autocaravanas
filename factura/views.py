@@ -23,7 +23,7 @@ def generar_factura(request, pedido_id):
         nombre_producto = producto_info['nombre']
         cantidad_pedido = producto_info['cantidad']
 
-        producto_existente = Producto.objects.get(nombre=nombre_producto)
+        producto_existente = Producto.objects.filter(nombre=nombre_producto).order_by("nombre").first()
 
         Factura_productos_personalizado.objects.create(factura=nueva_factura, producto=producto_existente, cantidad=cantidad_pedido)
 

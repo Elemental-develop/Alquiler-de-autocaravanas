@@ -23,7 +23,7 @@ def generar_factura(request, pedido_id):
         nombre_producto = producto_info['nombre']
         cantidad_pedido = producto_info['cantidad']
 
-        producto_existente = Producto.objects.get(nombre=nombre_producto)
+        producto_existente = Producto.objects.filter(nombre=nombre_producto).order_by("nombre").first()
 
         Factura_productos_personalizado.objects.create(factura=nueva_factura, producto=producto_existente, cantidad=cantidad_pedido)
 
@@ -66,20 +66,22 @@ def generar_factura_pdf(request, factura_id):
     for i, producto in enumerate(productos):
         row_y = table_y - (i + 1) * row_height
         p.drawString(table_x, row_y, producto.producto.nombre)
-        p.drawString(table_x + col_widths[0], row_y, f"${producto.producto.precio:.2f}")
+        p.drawString(table_x + col_widths[0], row_y, f"${producto.producto.precio_rebajado():.2f}")
 
         cantidad = producto.cantidad
 
         p.drawString(table_x + col_widths[0] + col_widths[1], row_y, str(cantidad))
 
-        subtotal = producto.producto.precio * cantidad
+        subtotal = producto.producto.precio_rebajado() * cantidad
         p.drawString(table_x + col_widths[0] + col_widths[1] + col_widths[2], row_y, f"${subtotal:.2f}")
 
-    total = sum(producto.producto.precio * producto.cantidad for producto in productos)
+    total = sum(producto.producto.precio_rebajado() * producto.cantidad for producto in productos)
 
     p.line(table_x, table_y - (len(productos) + 1) * row_height, table_x + sum(col_widths), table_y - (len(productos) + 1) * row_height)
 
     p.drawString(table_x + col_widths[0] + col_widths[1] + col_widths[2], table_y - (len(productos) + 2) * row_height, f"Total: ${total:.2f}")
+    
+    p.drawString(table_x, table_y - (len(productos) + 3) * row_height, f"Seguimiento del pedido: {factura.pedido.secreto}")
 
     p.showPage()
     p.save()

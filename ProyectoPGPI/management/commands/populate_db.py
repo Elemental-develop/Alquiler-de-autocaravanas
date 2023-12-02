@@ -10,36 +10,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Populating the database...'))
 
-        User.objects.create(
-            username='alejandro@gmail.com',
-            email='alejandro@gmail.com',
-            password = make_password('alejandropass123')
-        )
-
-        User.objects.create(
-            username='daniel@gmail.com',
-            email='daniel@gmail.com',
-            password = make_password('danielpass123')
-        )
-
-        User.objects.create(
-            username='rafael@gmail.com',
-            email='rafael@gmail.com',
-            password = make_password('rafaelpass123')
-        )
-
-        User.objects.create(
-            username='juancarlos@gmail.com',
-            email='juancarlos@gmail.com',
-            password = make_password('juancarlospass123')
-        )
-
-        User.objects.create(
-            username='maria@gmail.com',
-            email='maria@gmail.com',
-            password = make_password('mariapass123')
-        )        
-
+       
         Oferta.objects.create(
             porcentaje = 20,
         )

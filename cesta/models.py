@@ -1,4 +1,5 @@
 from enum import Enum, auto
+import uuid
 from django.db import models
 from producto.models import Producto
 from django.contrib.auth.models import User
@@ -14,13 +15,16 @@ class Carrito(models.Model):
     def limpiar_carrito(self):
         self.productos.clear()
     
+    def limpiar_carrito(self):
+        self.productos.clear()
+
 class ItemCarrito(models.Model):
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
     cantidad = models.PositiveIntegerField(default=1)
 
     def calcular_subtotal(self):
-        return self.producto.precio * self.cantidad
+        return self.producto.precio_rebajado() * self.cantidad
 
 
 class FormaEntrega(models.TextChoices):
@@ -31,6 +35,7 @@ class FormaEntrega(models.TextChoices):
 
 class FormaPago(models.TextChoices):
     CONTRARREEMBOLSO = 'CONT', 'Contrareembolso'
+    STRIPE = 'STRIPE', 'Pago con Stripe'
     
     
 class DatosPedido(models.Model):
@@ -63,12 +68,12 @@ class DatosPedido(models.Model):
 
 
 class Estado(models.TextChoices):
-    LISTO = 'LISTO', 'Listo'
+    ENTREGADO = 'ENTREGADO', 'Entregado'
     CONFIRMADO = 'CONFIRMADO', 'Confirmado'
-    EN_PROCESO = 'EN_PROCESO', 'En proceso'
+    PENDIENTE = 'PENDIENTE', 'Pendiente'
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     telefono = models.CharField(max_length=12)
     direccion_envio = models.CharField(max_length=150)
@@ -78,6 +83,8 @@ class Pedido(models.Model):
     email = models.EmailField(default="")
     first_name = models.CharField(max_length=30, default="")
     last_name = models.CharField(max_length=30, default="")
+
+    secreto = models.CharField(max_length=255, default=uuid.uuid4())
     
     forma_entrega = models.CharField(
         max_length=5,
@@ -101,7 +108,7 @@ class Pedido(models.Model):
     estado = models.CharField(
         max_length=15,
         choices=Estado.choices,
-        default=Estado.EN_PROCESO
+        default=Estado.PENDIENTE
     )
     
     precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)

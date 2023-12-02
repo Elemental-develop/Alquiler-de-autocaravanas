@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+    <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reclamacion</title>
+</head>
+
+<body>
+    {% load crispy_forms_tags %}
+
+    {% block content %}
+    
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Hacer reclamación</legend>
+                {{ form | crispy }}
+            </fieldset>
+                <br>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Enviar reclamación</button>
+            </div>
+            <br>
+        </form>
+         {{mensaje}}
+         {{datos}}
+    </div>             
+
+{% endblock content %}
+</body>
+</html>

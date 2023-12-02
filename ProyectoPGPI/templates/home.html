@@ -57,11 +57,13 @@
                 
                 <div>
                     {% if producto.unidades != 0 %}
-                        <p class="icono" style="display: inline; margin-left: 10px;">
-                            <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
-                                <i class="fas fa-cart-plus icono"></i>
-                            </a>
-                        </p>
+                    <input class="icono" type="number" id="cantidad-{{ producto.id }}" name="cantidad" style="width: 50px;" min="1" value="1" onchange="updateCartLink({{ producto.id }})">
+
+                    <p class="icono" style="display: inline; margin-left: 10px;">
+                        <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}">
+                            <i class="fas fa-cart-plus icono"></i>
+                        </a>
+                    </p>
                     {% endif %}
                 </div>
                     
@@ -114,11 +116,13 @@
                 
                 <div>
                     {% if producto.unidades != 0 %}
-                        <p class="icono" style="display: inline; margin-left: 10px;">
-                            <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}">
-                                <i class="fas fa-cart-plus icono"></i>
-                            </a>
-                        </p>
+                    <input class="icono" type="number" id="cantidad-{{ producto.id }}" name="cantidad" style="width: 50px;" min="1" value="1" onchange="updateCartLink({{ producto.id }})">
+
+                    <p class="icono" style="display: inline; margin-left: 10px;">
+                        <a class="btn-link" href="/cesta/agregar-al-carrito/{{producto.id}}?cantidad=1" id="add-to-cart-{{ producto.id }}">
+                            <i class="fas fa-cart-plus icono"></i>
+                        </a>
+                    </p>
                     {% endif %}
                 </div>
                     
@@ -130,7 +134,13 @@
 
         {% endfor %}
     </div>
-    
+    <script>
+        function updateCartLink(productId) {
+            var cantidadInput = document.getElementById('cantidad-' + productId);
+            var cartLink = document.getElementById('add-to-cart-' + productId);
+            cartLink.href = '/cesta/agregar-al-carrito/' + productId + '?cantidad=' + cantidadInput.value;
+        }
+    </script>
     {% endblock %}
 </body>
 

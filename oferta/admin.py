@@ -5,3 +5,5 @@ from .models import Oferta
 class OfertaAdmin(admin.ModelAdmin):
     list_display = ['id', 'porcentaje']
     search_fields = ['porcentaje']
+
+

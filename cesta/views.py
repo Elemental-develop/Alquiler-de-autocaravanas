@@ -1,28 +1,73 @@
+from itertools import product
+from pyexpat.errors import messages
+import uuid
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+import stripe
 
 from cesta.forms import DatosPagoForm, DatosPedidoForm
-from .models import Pedido, Producto, Carrito, ItemCarrito, DatosPedido
-from django.http import HttpResponse, JsonResponse
+from cesta.utils import create_pedido, get_productos_from_carrito
+from .models import Estado, FormaPago, Pedido, Producto, Carrito, ItemCarrito, DatosPedido
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login,logout
 from django.urls import reverse
 
 import json
 
-@login_required
-def agregar_al_carrito(request, producto_id):
-    producto = get_object_or_404(Producto, pk=producto_id)
-    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
-    item, item_created = ItemCarrito.objects.get_or_create(producto=producto, carrito=carrito)
+def delete_temporal_user(request):
+    if request.user.username.startswith('fake'):
+        user = User.objects.get(username=request.user.username)
+        logout(request)
+        user.delete()
 
-    if not item_created:
-        item.cantidad += 1
+def generar_usuario_temporal(request):
+    username = f'fake-{uuid.uuid4()}'
+    user = User.objects.create_user(username=username)
+    login(request, user)
+    return user
+
+def agregar_al_carrito(request, producto_id):
+    
+    user = None
+    if not request.user.is_authenticated:
+        user = generar_usuario_temporal(request)
+    
+    user = user if user else request.user
+    
+    producto = get_object_or_404(Producto, pk=producto_id)
+    carrito, created = Carrito.objects.get_or_create(usuario=user)
+    item, item_created = ItemCarrito.objects.get_or_create(producto=producto, carrito=carrito)
+    
+    cantidad_param = request.GET.get('cantidad')
+    
+    if item_created:
+        item.cantidad = cantidad_param
         item.save()
 
     return redirect('ver_carrito')
 
 @login_required
+def eliminar_del_carrito(request, producto_id):
+    carrito = get_object_or_404(Carrito, usuario=request.user)
+
+    item_carrito = get_object_or_404(ItemCarrito, carrito=carrito, producto__id=producto_id)
+
+    item_carrito.delete()
+    return redirect('ver_carrito')
+
+
 def ver_carrito(request):
-    carrito, created = Carrito.objects.get_or_create(usuario=request.user)
+    
+    user = None
+    if not request.user.is_authenticated:
+        user = generar_usuario_temporal(request)
+    
+    user = user if user else request.user
+    
+    carrito, created = Carrito.objects.get_or_create(usuario=user)
     items = carrito.items.all()
 
     return render(request, 'carrito.html', {'carrito': carrito, 'items': items})
@@ -33,6 +78,9 @@ def realizar_pedido(request):
     if request.method == "POST":
         user = request.user
         carrito, created = Carrito.objects.get_or_create(usuario=user)
+    
+
+
 
         # Almacenamos en diccionario datos del formulario para
         # manejarlos de manera comoda
@@ -54,6 +102,14 @@ def realizar_pedido(request):
             item, created = ItemCarrito.objects.get_or_create(carrito=carrito, producto=producto)
             item.cantidad = cantidad
             item.save()
+
+        if(carrito.calcular_total() < 300):
+            envio = Producto.objects.create(nombre="Gastos de envío", precio=70, unidades=1)
+            envio.save()
+            item, item_created = ItemCarrito.objects.get_or_create(producto=envio, carrito=carrito)
+            if item_created:
+                item.cantidad = 1
+                item.save()
         
         # Cambiar a una template de la siguiente fase
         # de la compra
@@ -68,6 +124,7 @@ def procesar_pedido(request):
             
             datos_pedido = form.save(commit=False)
             carrito = Carrito.objects.get(usuario=request.user)
+
 
             # Intenta obtener un DatosPedido existente asociado al Carrito
             try:
@@ -110,65 +167,109 @@ def procesar_pedido(request):
 
 @login_required
 def procesar_pago(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    
     if request.method == 'POST':
         form = DatosPagoForm(request.POST)
-        print("====PREVALID")
         if form.is_valid():
-            print("====VALID")
-            
-            datos_pago = form.save(commit=False)
-            # form.cleaned_data['forma_pago']
+            datos_pedido = DatosPedido.objects.get(carrito__usuario=request.user)
             carrito = Carrito.objects.get(usuario=request.user)
-            datos_pedido = DatosPedido.objects.get(carrito=carrito)
             
-            productos = []
-            
-            for item in carrito.items.all():
-                producto_info = {
-                    'id': item.producto.id,
-                    'nombre': item.producto.nombre,
-                    'precio': float(item.producto.precio),  # Convertir Decimal a float
-                    'cantidad': item.cantidad,
-                    'subtotal': float(item.calcular_subtotal()),  # Convertir Decimal a float
-                }
-                productos.append(producto_info)
-            
-            
-            
-            
-            pedido = Pedido(
-                usuario=request.user,
-                telefono=datos_pedido.telefono,
-                direccion_envio=datos_pedido.direccion_envio,
-                direccion_facturacion=datos_pedido.direccion_facturacion,
-                instrucciones_entrega=datos_pedido.instrucciones_entrega,
-                email=datos_pedido.email,
-                first_name=datos_pedido.first_name,
-                last_name=datos_pedido.last_name,
-                forma_entrega=datos_pedido.forma_entrega,
-                forma_pago=datos_pedido.forma_pago,
-                productos=json.dumps(productos),
-                precio=carrito.calcular_total()
-            )
+            productos = get_productos_from_carrito(carrito)
 
-            pedido.save()
+            if form.cleaned_data['forma_pago'] == FormaPago.CONTRARREEMBOLSO:
+                
+                pedido = create_pedido(request, datos_pedido, productos, estado=Estado.CONFIRMADO)
+                
+                carrito.limpiar_carrito()
+                delete_temporal_user(request)
+                
+                factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
+                for producto in productos:                    
+                    item = Producto.objects.get(pk=producto.get("id"))
+                    item.unidades -= 1
+                    item.save()
+                return redirect(factura_url)
+                
+                return render(request, 'exito_pago.html')
 
-            factura_url = reverse('generar_factura', kwargs={'pedido_id': pedido.id})
-            return redirect(factura_url)
+            elif form.cleaned_data['forma_pago'] == FormaPago.STRIPE:
+
+                productos_stripe = []
+
+                for item in carrito.items.all():
+                    producto_info = {
+                        'price_data': {
+                            'currency': 'eur',
+                            'product_data': {
+                                'name': item.producto.nombre,
+                            },
+                            'unit_amount': int(item.producto.precio * 100),  # Monto en céntimos
+                        },
+                        'quantity': item.cantidad,
+                    }
+                    productos_stripe.append(producto_info)
+                
+                pedido = create_pedido(request, datos_pedido, productos)
+
+                session = stripe.checkout.Session.create(
+                    payment_method_types=['card'],
+                    line_items=productos_stripe,
+                    mode='payment',
+                    success_url=request.build_absolute_uri(reverse('exito_pago_stripe')) + '?session_id={CHECKOUT_SESSION_ID}',
+                    cancel_url=request.build_absolute_uri(reverse('cancelar_pago_stripe'))
+                )
+
+                return render(request, 'procesar_pago_stripe.html', {'session_id': session.id})
     else:
-        form = DatosPagoForm(request.POST)
+        form = DatosPagoForm()
 
-    # GET
-    
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()
-    
+
     return render(request, 'procesar_pago.html', {'form': form, 'items': items})
 
-    def get_form_kwargs(self):
-            kwargs = super().get_form_kwargs()
-            kwargs['request'] = self.request
-            return kwargs
-        
-        
 
+def exito_pago_stripe(request):
+
+    session_id = request.GET.get('session_id')
+
+    if session_id:
+
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        if session.payment_status == 'paid':
+
+            ultimo_pedido = Pedido.objects.filter(usuario=request.user).order_by('-fecha_creacion').first()
+            if ultimo_pedido:
+                ultimo_pedido.estado = Estado.CONFIRMADO
+                ultimo_pedido.save()
+
+                carrito = Carrito.objects.get(usuario=request.user)
+                for producto in get_productos_from_carrito(carrito):                 
+                    item = Producto.objects.get(pk=producto.get("id"))
+                    item.unidades -= 1
+                    item.save()
+
+                carrito.limpiar_carrito()
+
+                delete_temporal_user(request)
+
+                
+                            
+            else:
+                return render(request, 'cancelar_pago.html')
+            
+            factura_url = reverse('generar_factura', kwargs={'pedido_id': ultimo_pedido.id})
+
+            
+            return redirect(factura_url)
+
+            return render(request, 'exito_pago.html')
+
+
+    return HttpResponse("PAGO NO EXITOSO")
+
+def cancelar_pago_stripe(request):
+    session_id = request.GET.get('session_id')
+    return render(request, 'cancelar_pago.html')

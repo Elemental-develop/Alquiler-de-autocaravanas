@@ -27,12 +27,17 @@
             value="{{ item.cantidad }}" min="0"></h4>
         <h4 class="message">Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
         <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
+
+        <a class="btn-link" href="/cesta/eliminar_del_carrito/{{ item.producto.id }}" >
+          <i class="fa-solid fa-trash icono"></i>
+        </a>
       </div>
       {% endfor %}
     </div>
 
     <div class="pagina-centrada-cuenta">
-      <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
+        <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
+        <h4>Gastos de envío de 70€ en pedidos menores a 300€</h4>
       <button type="submit" class="icono-cuenta">Realizar pedido</button>
 
     </div>
@@ -62,7 +67,7 @@
         fetch(`/obtener_producto/${productoId}/`)
           .then(response => response.json())
           .then(producto => {
-            const precioProducto = producto ? producto.precio : 0.0;
+            const precioProducto = producto ? producto.precio_rebajado : 0.0;
             callback(precioProducto);
           })
           .catch(error => {
@@ -76,6 +81,8 @@
         const subtotales = document.querySelectorAll('.subtotal');
         subtotales.forEach(subtotal => {
           total += parseFloat(subtotal.textContent);
+          if (total < 300) {
+            total += 70;}
         });
         document.querySelector('#total').textContent = total.toFixed(2);
       }
@@ -114,7 +121,9 @@
         actualizarTotal();
       }
     });
-  </script>
+
+</script>
+
   {% endblock %}
 </body>
 

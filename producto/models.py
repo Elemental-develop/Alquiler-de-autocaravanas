@@ -34,6 +34,8 @@ class Producto(models.Model):
         self.save()
         
     def precio_rebajado(self):
+        if self.oferta == None:
+            return self.precio
         return float(self.precio) - float(self.oferta.porcentaje)/100. * float(self.precio)
 
     def str(self):

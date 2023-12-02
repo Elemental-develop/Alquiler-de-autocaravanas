@@ -13,6 +13,9 @@ def lista_productos(request):
     
     if categoria != '':
         productos = Producto.objects.filter(categoria=categoria)
+    for producto in productos:
+        if producto.nombre == 'Gastos de envío':
+            productos = productos.exclude(nombre='Gastos de envío')
 
     return render(request, 'lista_productos.html', {'productos': productos})
 

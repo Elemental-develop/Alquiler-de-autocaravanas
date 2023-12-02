@@ -1,8 +1,10 @@
+from math import prod
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from producto.models import Producto
 from datos_entrega.models import DatosEntrega
-from django.db.models import Q
+from django.db.models import Q, F, FloatField
+from django.db.models.functions import Cast
 from ProyectoPGPI.forms import ClaimForm, CustomUserCreationForm, UserProfileForm
 from datos_entrega.forms import DatosEntregaForm
 from django.contrib.auth import login, logout
@@ -25,7 +27,7 @@ def home(request):
     
     # Construir la consulta de manera condicional
     query = Q()
-    
+    query_oferta = Q()
     if busqueda_q:
         query &= Q(nombre__icontains = busqueda_q) | Q(descripcion__icontains = busqueda_q)
     
@@ -34,12 +36,19 @@ def home(request):
     
     if busqueda_precio_min:
         query &= Q(precio__gte=float(busqueda_precio_min))
+        query_oferta &= Q(precio_rebajado__gte=float(busqueda_precio_min))
     
     if busqueda_precio_max:
         query &= Q(precio__lte=float(busqueda_precio_max))
+        query_oferta = Q(precio_rebajado__lte=float(busqueda_precio_max))
 
+    productos_rebajados = Producto.objects.annotate(
+        precio_rebajado=Cast(F('precio') - (F('precio') * F('oferta__porcentaje') / 100), output_field=FloatField())
+    ).filter(query_oferta).distinct()
+    productos_originales = Producto.objects.filter(query).distinct()
+    
+    productos = productos_rebajados | productos_originales
 
-    productos = Producto.objects.filter(query).distinct()
     if request.GET.get('q') != None or request.GET.get('q') or request.GET.get('marca') or request.GET.get('precio_min') or request.GET.get('precio_max'):
         return render(request, "lista_productos.html", {'productos': productos, 'marcas': marcas,'busqueda_q': busqueda_q, 'busqueda_marca': busqueda_marca, 'busqueda_precio_min': busqueda_precio_min, 'busqueda_precio_max': busqueda_precio_max})
     return render(request, 'home.html', {'productos': productos, 'marcas': marcas,'busqueda_q': busqueda_q, 'busqueda_marca': busqueda_marca, 'busqueda_precio_min': busqueda_precio_min, 'busqueda_precio_max': busqueda_precio_max})
@@ -78,7 +87,7 @@ def logout_cuenta(request):
 def obtener_producto(request, producto_id):
     try:
         producto = Producto.objects.get(id=producto_id)
-        data = {'id': producto.id, 'nombre': producto.nombre, 'precio': producto.precio}
+        data = {'id': producto.id, 'nombre': producto.nombre, 'precio': producto.precio, 'precio_rebajado': producto.precio_rebajado()}
         return JsonResponse(data)
     except Producto.DoesNotExist:
         return JsonResponse({'error': 'Producto no encontrado'}, status=404)

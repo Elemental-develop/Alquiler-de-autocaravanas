@@ -137,13 +137,17 @@ def reclamaciones(request):
         return redirect('home')
     return render(request, 'reclamacion.html', {'form': ClaimForm()})
 
-@require_http_methods(["GET", "POST"]) 
 def seguimiento(request):
     pedido = None
-    print(request.method == 'POST')
     if request.method == 'POST':
         codigo = request.POST.get("codigo")
-        pedido = Pedido.objects.get(secreto=codigo)
-        print(pedido)
+        pedidos = Pedido.objects.all()
+        secretos = []
+        for pedido in pedidos:
+            secretos.append(pedido.secreto)
+        if codigo in secretos:
+            pedido = Pedido.objects.get(secreto=codigo)
+        else:
+            return redirect('seguimiento')
 
     return render(request, 'seguimiento.html', {'pedido':pedido})

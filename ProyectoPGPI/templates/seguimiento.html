@@ -9,11 +9,11 @@
     <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro</title>
 </head>
 
 <body>
     {% block content %}
+    <title>Seguimiento</title>
 
     <div class="pagina-centrada-cuenta">
         <h2 style="color: #8d021f;">Introduzca su código de seguimiento para consultar los datos de su pedido</h2>
@@ -22,7 +22,7 @@
 
         <label for="codigo">Código de seguimiento:</label>
         <input type="text" id="codigo" name="codigo">
-        <button type="submit">Enviar</button>
+        <button class="icono" type="submit">Enviar</button>
     </form>
     </div>
     <div class="pagina-centrada-cuenta">

@@ -9,13 +9,13 @@
     <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reclamacion</title>
 </head>
 
 <body>
     {% load crispy_forms_tags %}
     {% block content %}
-    
+    <title>Reclamacion</title>
+
     <h1 style="color: #8d021f; text-align: center;">Realizar reclamación</h1>
     <div class="pagina-centrada-cuenta">
     <form method="POST">
@@ -26,7 +26,7 @@
 
         <p><label for="descripcion">Descripción:</label>
         <input style="height: 50px;" type="text" id="descripcion" name="descripcion"></p>
-        <button type="submit">Enviar</button>
+        <button class="icono" style="margin-top: 10px;" type="submit">Enviar</button>
     </form>
     </div>         
 

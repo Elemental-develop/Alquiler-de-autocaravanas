@@ -17,10 +17,10 @@
             <form method="get" action="/">
 
                 <label for="id_query" style="color: #ffd200" >Buscar:</label>
-                <input type="text" name="q" value="{% if busqueda_q != 'Buscar...' %}{{ busqueda_q }}{% endif %}" placeholder="Buscar..." class="form-control">
+                <input class="icono" type="text" name="q" value="{% if busqueda_q != 'Buscar...' %}{{ busqueda_q }}{% endif %}" placeholder="Buscar..." class="form-control">
 
                 <label for="marca" style="color: #ffd200">Marca:</label>
-                <select name="marca">
+                <select  class="icono"  name="marca">
                     <option {% if not busqueda_marca %}selected{% endif %}></option>
                     {% if not busqueda_marca == ""%}
                         <option>{{ busqueda_marca }}</option>
@@ -31,12 +31,12 @@
                 </select>
 
                 <label for="precio_min" style="color: #ffd200" >Precio mínimo:</label>
-                <input style="width: 70px" type="number" name="precio_min" value="{{ busqueda_precio_min }}" min="0">
+                <input class="icono" style="width: 70px" type="number" name="precio_min" value="{{ busqueda_precio_min }}" min="0">
 
                 <label for="precio_max" style="color: #ffd200">Precio máximo:</label>
-                <input style="width: 70px" type="number" name="precio_max" value="{{ busqueda_precio_max }}" min="0">
+                <input class="icono" style="width: 70px" type="number" name="precio_max" value="{{ busqueda_precio_max }}" min="0">
 
-                <button type="submit">Buscar</button>
+                <button  class="icono" ype="submit">Buscar</button>
             </form>
         </div>
         <div id="nav-links">

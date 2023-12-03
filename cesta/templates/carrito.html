@@ -8,11 +8,11 @@
   <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrito</title>
 </head>
 
 <body>
   {% block content %}
+  <title>Carrito</title>
   <h1 class="h1">Carrito de Compra</h1>
 
   <form method="post" action="{% url 'realizar_pedido' %}">

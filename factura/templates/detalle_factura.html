@@ -17,10 +17,12 @@
 
   <div class="pagina-centrada-cuenta">
 
-    <p>Fecha de realización del pedido:
-    <p style="font-weight: bold;"> {{ factura.fecha_emision }}</p>
-    </p>
-    <h2 class="message">Precio del pedido: {{ factura.total }}€</h2>
+    <h2 class="message">Fecha de realización del pedido:</h2>
+    <p style="font-weight: bold; margin-top: -10px;">{{ factura.fecha_emision }}</p>
+
+    <h2 class="message">Precio del pedido:</h2>
+    <p style="font-weight: bold; margin-top: -10px;">{{ factura.total }}€</p>
+
     <h2 class="message">Código para realizar el seguimiento de su pedido:</h2>
     <p style="font-weight: bold; margin-top: -10px;">{{ factura.pedido.secreto }}</p>
      

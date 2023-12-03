@@ -67,13 +67,24 @@
     <h1 class="h1">Resumen del pedido</h1>
     <div class="sugerencias">
         {% for item in items %}
-        <div class="product">
-          <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}">
-          <h3>{{ item.producto.nombre }}</h3>
-          <h4>Cantidad: {{ item.cantidad }} días</h4>
-          <h4 class="message">Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
-          <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
-        </div>
+            {% if item.producto.nombre == "Gastos de envío" %}
+                <div class="product" style="height: 100px; margin-bottom: 460px;">
+                    <h3>{{ item.producto.nombre }}</h3>
+                    <h4 class="message"><span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
+                    <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
+                </div>
+            {% else %}
+                <div class="product">
+
+                    <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}">
+                    <div class="product-info">
+                        <h3>{{ item.producto.nombre }}</h3>
+                        <h4>Cantidad: {{ item.cantidad }} días</h4>
+                        <h4 class="message">Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
+                        <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
+                    </div>
+                </div>
+            {% endif %}       
         {% endfor %}
       </div>
 

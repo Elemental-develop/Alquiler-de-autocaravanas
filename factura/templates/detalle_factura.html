@@ -1,15 +1,47 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block content %}
-  <h1>Detalle de Factura</h1>
-  <p>Fecha de Emisión: {{ factura.fecha_emision }}</p>
-  <h2>Productos:</h2>
-  <ul>
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css'>
+  <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio</title>
+</head>
+
+<body>
+  {% block content %}
+
+  <div class="pagina-centrada-cuenta">
+
+    <p>Fecha de realización del pedido:
+    <p style="font-weight: bold;"> {{ factura.fecha_emision }}</p>
+    </p>
+    <h2 class="message">Precio del pedido: {{ factura.total }}€</h2>
+    <h2 class="message">Código para realizar el seguimiento de su pedido:</h2>
+    <p style="font-weight: bold; margin-top: -10px;">{{ factura.pedido.secreto }}</p>
+     
+    <h5><a class="icono" href="{% url 'generar_factura_pdf' factura.id %}">Generar PDF</a></h5>
+  </div>
+  <p class="subtitulo-centrado">Productos</p>
+  <div class="sugerencias">
     {% for factura_producto in factura.factura_productos_personalizado_set.all %}
-      <li>{{ factura_producto.producto.nombre }} - {{ factura_producto.producto.precio_rebajado }} - Cantidad: {{ factura_producto.cantidad }}</li>
+        {% if factura_producto.producto.nombre != "Gastos de envío" %}
+          <div class="product">
+              <img src="{{ factura_producto.producto.imagen }}" alt="{{ item.producto.nombre }}">
+              <div class="product-info">
+               <h3>{{ factura_producto.producto.nombre }}</h3>
+                <h4 class="message" style="margin-top: 20px;">Cantidad: {{ factura_producto.cantidad }} días</h4>
+                <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
+              </div>
+            </div>
+          {% endif %}       
     {% endfor %}
-  </ul>
-  <p>Seguimienton de su pedido: {{ factura.pedido.secreto }}</p>
-  <p>Total: {{ factura.total }}</p>
-  <a href="{% url 'generar_factura_pdf' factura.id %}">Generar PDF</a>
-{% endblock %}
+ </div>
+  {% endblock %}
+</body>
+
+</html>

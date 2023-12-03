@@ -14,21 +14,46 @@
 
 <body>
     {% block content %}
+
+    <div class="pagina-centrada-cuenta">
+        <h2 style="color: #8d021f;">Introduzca su código de seguimiento para consultar los datos de su pedido</h2>
     <form method="POST">
         {% csrf_token %}
 
-        <label for="codigo">Código de seguimiento del pedido:</label>
+        <label for="codigo">Código de seguimiento:</label>
         <input type="text" id="codigo" name="codigo">
         <button type="submit">Enviar</button>
     </form>
-    <p>Código de seguimiento: {{ pedido.secreto }}</p>
-    <p>Nombre: {{ pedido.first_name }}</p>
-    <p>Apellidos: {{ pedido.last_name }}</p>
-    <p>Estado del pedido: {{ pedido.estado }}</p>
+    </div>
+    <div class="pagina-centrada-cuenta">
 
-    
-    {{ pedido.productos }}
 
+        {% if pedido.precio is None %}
+            <p class="message">No existe ningún pedido asociado a ese código de seguimiento</p>
+        {% else %}
+            <p><span class="message">Nombre:</span> {{ pedido.first_name }}</p>
+            <p><span class="message">Apellidos:</span> {{ pedido.last_name }}</p>
+            <p><span class="message">Correo electrónico:</span> {{ pedido.email }}</p>
+            <p><span class="message">Teléfono:</span> {{ pedido.telefono }}</p>
+            <p><span class="message">Dirección de envío:</span> {{ pedido.direccion_envio }}</p>
+            {% if pedido.forma_entrega == 'EST' %}
+                <p><span class="message">Forma de entrega:</span> Estándar </p>
+            {% elif pedido.forma_entrega == 'URG' %}
+                <p><span class="message">Forma de entrega:</span> Urgente </p>
+            {% else %}
+                <p><span class="message">Forma de entrega:</span> "24 horas" </p>
+            {% endif %}
+            {% if pedido.forma_pago == 'CONT' %}
+                <p><span class="message">Forma de pago:</span> Contrareembolso </p>
+            {% else %}
+                <p><span class="message">Forma de pago:</span> "Con tarjeta" </p>
+            {% endif %}
+            <p><span class="message">Estado:</span> {{ pedido.estado }}</p>
+            <p><span class="message">Precio :</span> {{ pedido.precio }}€</p>
+        {% endif %}
+
+
+    </div>
     {% endblock content %}
 </body>
 

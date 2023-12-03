@@ -1,7 +1,7 @@
 from django.contrib import admin
-from claim.models import Claim
+from .models import Reclamacion
 
-@admin.register(Claim)
-class ClaimAdmin(admin.ModelAdmin):
+@admin.register(Reclamacion)
+class ReclamacionAdmin(admin.ModelAdmin):
     list_display = ['titulo', 'descripcion']
     search_fields = ['titulo']

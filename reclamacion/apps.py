@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ClaimConfig(AppConfig):
+class ReclamacionConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'claim'
+    name = 'reclamacion'

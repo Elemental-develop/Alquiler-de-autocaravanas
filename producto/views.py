@@ -46,12 +46,10 @@ def detalles_producto(request, producto_id):
                 nueva_opinion = f'{nueva_opinion};*{request.user.username}'
             producto_seleccionado.agregar_opinion(nueva_opinion)
 
-            print(nueva_opinion)
             if ';*' in nueva_opinion:
                 usuario = nueva_opinion.split(';*')[1]
             else:
                 usuario = 'Anónimo'
-            print(usuario)
             lista_usuarios.append(usuario)
             nueva_opinion = nueva_opinion.split(';*')[0]
             lista_opiniones.append(nueva_opinion)

@@ -204,7 +204,7 @@ def procesar_pago(request):
                             'product_data': {
                                 'name': item.producto.nombre,
                             },
-                            'unit_amount': int(item.producto.precio * 100),  # Monto en céntimos
+                            'unit_amount': int(item.producto.precio_rebajado() * 100),  # Monto en céntimos
                         },
                         'quantity': item.cantidad,
                     }

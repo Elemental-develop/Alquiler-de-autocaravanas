@@ -9,30 +9,26 @@
     <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reclamacion</title>
 </head>
 
 <body>
     {% load crispy_forms_tags %}
-
     {% block content %}
-    
-    <div class="content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Hacer reclamación</legend>
-                {{ form | crispy }}
-            </fieldset>
-                <br>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Enviar reclamación</button>
-            </div>
-            <br>
-        </form>
-         {{mensaje}}
-         {{datos}}
-    </div>             
+    <title>Reclamacion</title>
+
+    <h1 style="color: #8d021f; text-align: center;">Realizar reclamación</h1>
+    <div class="pagina-centrada-cuenta">
+    <form method="POST">
+        {% csrf_token %}
+
+        <p><label for="titulo">Título:</label>
+        <input type="text" id="titulo" name="titulo"></p>
+
+        <p><label for="descripcion">Descripción:</label>
+        <input style="height: 50px;" type="text" id="descripcion" name="descripcion"></p>
+        <button class="icono" style="margin-top: 10px;" type="submit">Enviar</button>
+    </form>
+    </div>         
 
 {% endblock content %}
 </body>

@@ -6,7 +6,7 @@ from producto.models import Producto
 from datos_entrega.models import DatosEntrega
 from django.db.models import Q, F, FloatField
 from django.db.models.functions import Cast
-from ProyectoPGPI.forms import ClaimForm, CustomUserCreationForm, UserProfileForm
+from ProyectoPGPI.forms import ReclamacionForm, CustomUserCreationForm, UserProfileForm
 from datos_entrega.forms import DatosEntregaForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -132,18 +132,22 @@ def editar_perfil(request):
 @require_http_methods(["GET", "POST"]) 
 def reclamaciones(request):
     if request.method == 'POST':
-        claim_creation_form = ClaimForm(data=request.POST)
-        claim_creation_form.save()
+        reclamacion_creation_form = ReclamacionForm(data=request.POST)
+        reclamacion_creation_form.save()
         return redirect('home')
-    return render(request, 'reclamacion.html', {'form': ClaimForm()})
+    return render(request, 'reclamacion.html', {'form': ReclamacionForm()})
 
-@require_http_methods(["GET", "POST"]) 
 def seguimiento(request):
     pedido = None
-    print(request.method == 'POST')
     if request.method == 'POST':
         codigo = request.POST.get("codigo")
-        pedido = Pedido.objects.get(secreto=codigo)
-        print(pedido)
+        pedidos = Pedido.objects.all()
+        secretos = []
+        for pedido in pedidos:
+            secretos.append(pedido.secreto)
+        if codigo in secretos:
+            pedido = Pedido.objects.get(secreto=codigo)
+        else:
+            return redirect('seguimiento')
 
     return render(request, 'seguimiento.html', {'pedido':pedido})

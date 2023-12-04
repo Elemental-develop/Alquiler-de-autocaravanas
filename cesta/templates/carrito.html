@@ -8,11 +8,11 @@
   <link type='text/css' href='{% static "css/estilos.css" %}' rel='stylesheet'>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carrito</title>
 </head>
 
 <body>
   {% block content %}
+  <title>Carrito</title>
   <h1 class="h1">Carrito de Compra</h1>
 
   <form method="post" action="{% url 'realizar_pedido' %}">
@@ -22,22 +22,24 @@
       {% for item in items %}
       <div class="product">
         <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}">
+        <div class="product-info">
         <h3>{{ item.producto.nombre }}</h3>
-        <h4>Cantidad (días): <input style="width: 70px" type="number" name="cantidad_{{ item.id }}"
+        <h4>Cantidad (días): <input  class="icono-cuenta" style="width: 70px" type="number" name="cantidad_{{ item.id }}"
             value="{{ item.cantidad }}" min="0"></h4>
         <h4 class="message">Subtotal: <span class="subtotal" id="subtotal-{{ item.id }}">{{ item.calcular_subtotal }}</span> €</h4>
         <input type="hidden" name="producto_id_{{ item.id }}" value="{{ item.producto.id }}">
-
         <a class="btn-link" href="/cesta/eliminar_del_carrito/{{ item.producto.id }}" >
           <i class="fa-solid fa-trash icono"></i>
         </a>
+        </div>
+        
       </div>
       {% endfor %}
     </div>
 
     <div class="pagina-centrada-cuenta">
         <h2 class="message">Total: <span id="total">{{ carrito.calcular_total }}</span> €</h2>
-        <h4>Gastos de envío de 70€ en pedidos menores a 300€</h4>
+        <h4 style="margin-top: -5px; margin-bottom: 10px;">Gastos de envío de 70€ en pedidos menores a 300€</h4>
       <button type="submit" class="icono-cuenta">Realizar pedido</button>
 
     </div>

@@ -84,7 +84,7 @@ class Pedido(models.Model):
     first_name = models.CharField(max_length=30, default="")
     last_name = models.CharField(max_length=30, default="")
 
-    secreto = models.CharField(max_length=255, default=uuid.uuid4())
+    secreto = models.CharField(max_length=255, default=uuid.uuid4)
     
     forma_entrega = models.CharField(
         max_length=5,

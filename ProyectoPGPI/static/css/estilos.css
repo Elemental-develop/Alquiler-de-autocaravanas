@@ -73,6 +73,7 @@
     margin-bottom: 10px;
 }
 
+
 .product {
     width: 300px;
     height: 550px;
@@ -101,6 +102,7 @@
     overflow: auto;
 
 }
+
 
 .product-info p {
     margin: 8px 0;
@@ -364,4 +366,3 @@ h5 a.btn-link {
 .logo-pago {
     height: 150px;
 }
-

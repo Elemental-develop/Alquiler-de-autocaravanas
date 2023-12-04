@@ -81,7 +81,6 @@ def registro(request):
 @login_required
 def cuenta(request):
     datos_entrega = DatosEntrega.objects.filter(user=request.user).first()
-    print(request.user.username)
     
     if('fake-' in request.user.username) and request.user.is_authenticated:
         return redirect( "login")

@@ -83,6 +83,8 @@
         {% if usuarios_opiniones %}
 
             <table class="tabla-opiniones">
+                <th>Usuario</th>
+                <th>Opinión</th> 
                 {% for usuario, opinion in usuarios_opiniones %}
                     <tr>
                         <td>{{ usuario }}</td>

@@ -43,7 +43,10 @@ def detalles_producto(request, producto_id):
         if form.is_valid():
             nueva_opinion = form.cleaned_data['opinion']
             if request.user.is_authenticated:
-                nueva_opinion = f'{nueva_opinion};*{request.user.username}'
+                if request.user.username.startswith('fake'):
+                    nueva_opinion = f'{nueva_opinion};*Anónimo'
+                else:
+                    nueva_opinion = f'{nueva_opinion};*{request.user.username}'
             producto_seleccionado.agregar_opinion(nueva_opinion)
 
             if ';*' in nueva_opinion:

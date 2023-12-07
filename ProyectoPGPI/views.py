@@ -67,6 +67,8 @@ def registro(request):
         'form': CustomUserCreationForm()
     }
     if request.method == 'POST':
+        if "fake-" in request.user.username:
+            logout(request)
         user_creation_form = CustomUserCreationForm(data=request.POST)
 
         if user_creation_form.is_valid():
@@ -83,7 +85,7 @@ def cuenta(request):
     datos_entrega = DatosEntrega.objects.filter(user=request.user).first()
     
     if('fake-' in request.user.username) and request.user.is_authenticated:
-        return redirect( "login")
+        return redirect("registro")
     return render(request, 'cuenta.html', {'user': request.user, 'datos_entrega': datos_entrega})
 
 @login_required

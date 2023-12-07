@@ -20,7 +20,7 @@ class Producto(models.Model):
     unidades = models.IntegerField(default=0)
     capacidad_viajar = models.IntegerField(default=0)
     capacidad_dormir = models.IntegerField(default=0)
-    oferta = models.ForeignKey(Oferta, on_delete=models.CASCADE, null=True, default=None)
+    oferta = models.ForeignKey(Oferta, on_delete=models.CASCADE, null=True, default=None, blank=True)
     opiniones = models.CharField(max_length=1000, blank=True, default=',')
     categoria = models.CharField(max_length=20, choices=CATEGORIAS_CHOICES, default='integral')
 

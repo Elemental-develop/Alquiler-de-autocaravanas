@@ -1,6 +1,7 @@
 from math import prod
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.contrib.auth.models import User
 from cesta.models import Pedido
 from producto.models import Producto
 from datos_entrega.models import DatosEntrega
@@ -11,8 +12,27 @@ from datos_entrega.forms import DatosEntregaForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.forms import AuthenticationForm
 
 
+def login2(request):
+    if 'fake-' in request.user.username:
+        logout(request)
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            try:
+                usuario = User.objects.get(username=username)
+                login(request, usuario)
+            except User.DoesNotExist:
+                form.add_error(None, "Usuario no existe")
+        return redirect('home')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
+        
 def home(request):
     # Query params
     busqueda_q = request.GET.get('q', '')
